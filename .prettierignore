@@ -1,0 +1,27 @@
+node_modules
+package-lock.json
+coverage
+dist
+web-build
+.expo
+expo-env.d.ts
+
+# Assets generados por herramientas (Icon Composer, etc.): su formato lo
+# maneja la herramienta, no nosotros.
+assets
+
+# Contrato bajado de MiFiBackend — es una copia literal de su openapi.yaml.
+# Reformatearlo haría ruido en el diff cada vez que se sincroniza.
+contracts
+
+# Tipos generados desde openapi.yaml (npm run sync:contract) — los escribe
+# openapi-typescript, no se editan a mano.
+src/api/schema.d.ts
+
+# Skills y configuración de agentes — Markdown de referencia, no código.
+.claude
+
+# Documentación de diseño y prosa — mismo criterio que MiFiBackend:
+# Prettier queda acotado a código (src/, config de la app, workflows).
+docs
+*.md

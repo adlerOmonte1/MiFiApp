@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  # Sin filtro de branches: corre en cualquier rama (feature/, docs/, staging, main...).
+  push:
+  pull_request:
+    branches: [main, staging]
+
+# Cancela corridas anteriores del mismo PR/rama cuando llega un push nuevo,
+# para no gastar minutos de CI validando código ya obsoleto.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # src/api/client.ts falla al importarse si esta variable no existe, y las
+  # pruebas la necesitan. Valor ficticio: en CI no se pega contra una API real.
+  EXPO_PUBLIC_API_URL: "http://localhost:3000/api"
+
+jobs:
+  verificacion:
+    name: Lint, formato, tipos y pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+        with:
+          # Historial completo: lo necesita el paso de resumen para
+          # calcular qué archivos cambiaron respecto al commit anterior.
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Lee la versión de .nvmrc, para que CI y las dos máquinas de
+          # desarrollo usen exactamente la misma.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Resumen — qué se está corriendo
+        run: |
+          {
+            echo "## 🔎 Resumen de la corrida"
+            echo ""
+            echo "| Campo | Valor |"
+            echo "|---|---|"
+            echo "| Evento | \`${{ github.event_name }}\` |"
+            echo "| Rama | \`${{ github.ref_name }}\` |"
+            echo "| Commit | [\`${GITHUB_SHA::7}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |"
+            echo "| Autor | ${{ github.actor }} |"
+            echo ""
+            echo "### 📄 Archivos modificados"
+            echo ""
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              BASE="${{ github.event.pull_request.base.sha }}"
+            else
+              BASE="${{ github.event.before }}"
+            fi
+            if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+              echo "_Primer push de la rama — archivos del commit \`${GITHUB_SHA::7}\`:_"
+              echo ""
+              git show --pretty="" --name-status "$GITHUB_SHA" | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+            else
+              git diff --name-status "$BASE" "$GITHUB_SHA" | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+            fi
+            echo ""
+            echo "### ✅ Verificaciones"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: |
+          npm run lint \
+            && echo "- ✅ Lint (ESLint): sin errores" >> "$GITHUB_STEP_SUMMARY" \
+            || { echo "- ❌ Lint (ESLint): con errores" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+
+      - name: Formato (Prettier)
+        run: |
+          npm run format:check \
+            && echo "- ✅ Formato (Prettier): consistente" >> "$GITHUB_STEP_SUMMARY" \
+            || { echo "- ❌ Formato (Prettier): archivos sin formatear" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+
+      - name: Chequeo de tipos (TypeScript)
+        run: |
+          npm run typecheck \
+            && echo "- ✅ Tipos (TypeScript): sin errores" >> "$GITHUB_STEP_SUMMARY" \
+            || { echo "- ❌ Tipos (TypeScript): con errores" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+
+      - name: Pruebas con cobertura (Jest — umbral RNF-18)
+        run: |
+          npm run test:coverage \
+            && echo "- ✅ Pruebas: todas pasaron y la cobertura llega al umbral (RNF-18)" >> "$GITHUB_STEP_SUMMARY" \
+            || { echo "- ❌ Pruebas: fallaron o no llegaron al umbral de cobertura" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+
+      - name: Subir reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      # El contrato es la fuente de verdad compartida con MiFiBackend. Si
+      # alguien editó schema.d.ts a mano, o el backend cambió openapi.yaml y
+      # acá no se corrió `npm run sync:contract`, este paso lo detecta.
+      - name: Contrato sincronizado con MiFiBackend
+        run: |
+          npm run sync:contract
+          if git diff --quiet -- src/api/schema.d.ts; then
+            echo "- ✅ Contrato: schema.d.ts al día con openapi.yaml" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- ⚠️ Contrato: schema.d.ts DESACTUALIZADO — corré \`npm run sync:contract\` y commiteá" >> "$GITHUB_STEP_SUMMARY"
+            git diff --stat -- src/api/schema.d.ts >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi

@@ -2,19 +2,29 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+
+    // expo/tsconfig.base no fija "types", pero al declararlo acá TS deja de
+    // auto-incluir todo node_modules/@types y usa solo esta lista. Hacen
+    // falta los globales de Jest (describe/it/expect) y los de Node
+    // (process.env en jest.env.ts y en src/api/client.ts). Los tipos de
+    // Expo NO van acá: entran por expo-env.d.ts.
+    "types": ["jest", "node"],
+
+    // Mismas garantías que MiFiBackend (ver su tsconfig.json). No vienen con
+    // "strict" y son justamente las que atrapan los bugs de datos de API:
+    // - noUncheckedIndexedAccess: acceder a un índice devuelve T | undefined,
+    //   así que un arreglo vacío del backend no se lee como si tuviera datos.
+    // - exactOptionalPropertyTypes: distingue "campo ausente" de
+    //   "campo presente en undefined", que es la diferencia entre un PATCH
+    //   que no toca un campo y uno que lo borra.
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedSideEffectImports": true,
+
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/assets/*": [
-        "./assets/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/assets/*": ["./assets/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

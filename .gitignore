@@ -9,6 +9,10 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Reportes de cobertura — los regenera `npm run test:coverage`, y en CI se
+# suben como artefacto del workflow.
+coverage/
+
 # Native
 .kotlin/
 *.orig.*
@@ -32,6 +36,11 @@ yarn-error.*
 
 # local env files
 .env*.local
+# Expo permite commitear .env porque solo inyecta variables EXPO_PUBLIC_ (que
+# son públicas por definición). Aun así lo ignoramos: evita que un secreto
+# puesto ahí por error termine en un repo público. El archivo versionado es
+# .env.example.
+.env
 
 # typescript
 *.tsbuildinfo
