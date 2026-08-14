@@ -61,7 +61,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "sync:contract": "node ./scripts/sync-contract.mjs"
+    "sync:contract": "node ./scripts/sync-contract.mjs",
+    "sync:design": "node ./scripts/sync-design.mjs",
+    "sync:upstream": "npm run sync:contract && npm run sync:design"
   },
   "private": true
 }
