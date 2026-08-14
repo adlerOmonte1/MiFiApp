@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 13 de agosto de 2026 (Fase 1 completa)
+> **Última actualización:** 13 de agosto de 2026 (apertura del sprint A1)
 
 ---
 
@@ -21,27 +21,19 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fase 1 (Diseño) COMPLETA. Todavía no se escribió ninguna pantalla.**
+**Fases 0 y 1 completas. Sprint A1 abierto, ningún paso empezado.**
 
 Lo que existe es la base: el proyecto configurado y verificado, el sistema
 de diseño implementado en código, y toda la documentación de cómo se va a
 construir. `src/` sigue siendo el andamiaje de `create-expo-app` más el
-cliente de API.
+cliente de API — **todavía no se escribió ninguna pantalla**.
 
-**Lo siguiente: arrancar el sprint A1 — Fundaciones y autenticación**
-(`PlanTrabajoFrontend.md §3`).
+**A1 — Fundaciones y autenticación.** Las decisiones previas están tomadas (A-12 a A-16
+en §6) y los 5 endpoints que A1 necesita existen y están probados en el
+backend contra Supabase real.
 
-⚠️ **Antes de A1 hay 4 decisiones que dependen del usuario**, todas
-chicas pero que afectan el código que se escriba:
-
-1. **Tuteo o voseo** en los textos (`ContenidoUI.md §8`). Recomendado:
-   tuteo, que es lo natural en Perú.
-2. **`¿Olvidaste tu contraseña?`** no tiene RF ni endpoint. Recomendado:
-   ocultarlo en v1.
-3. **Confirmar Ionicons** como set de íconos (`Iconografia.md §3`).
-4. **Resolver el conflicto AUT-01 CA01 vs RF-47** (ver deuda técnica nº 7):
-   tras el registro, ¿dashboard o consentimiento? Recomendado:
-   consentimiento.
+Los 6 pasos de A1 están en `PlanTrabajoFrontend.md §3`. Ninguno empezado
+todavía.
 
 ---
 
@@ -89,8 +81,10 @@ Detalle y tropiezos: `GUIA_INSTALACION.MD`.
 | 1.4 | Este documento | ✅ |
 | 1.5 | `Iconografia.md` — set, inventario y regla de uso | ✅ |
 | 1.6 | `ContenidoUI.md` — textos, estados y validaciones | ✅ |
+| — | `TextoConsentimiento.md` | ⚠️ borrador sin aprobar |
 
-**Fase 1 cerrada.** Falta solo confirmar las 4 decisiones del §2.
+**Fase 1 cerrada.** Las decisiones que quedaban se tomaron al abrir A1
+(A-12 a A-16 en §6).
 
 ---
 
@@ -112,6 +106,11 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | **A-09** | Tokens de texto separados de los de superficie (`primarioTexto`, `alertaTexto`) | 4 pares del mockup no llegaban a WCAG AA; conserva la identidad visual |
 | **A-10** | Umbral de cobertura apagado hasta A1 | Un umbral siempre en rojo se ignora |
 | **A-11** | Guards de sesión y consentimiento en **un solo layout** | Si cada pantalla valida, alguna se olvida — y es un requisito ético |
+| **A-12** | **Tuteo** en todos los textos de interfaz | Registro natural en Perú; los participantes son peruanos |
+| **A-13** | `¿Olvidaste tu contraseña?` **oculto en v1** | No hay RF ni endpoint; un enlace muerto castiga el SUS |
+| **A-14** | La pantalla 03 lleva campo **Nombre** | El contrato lo exige y el dashboard lo usa en el saludo. Corregir `Wireframes.md` en el backend |
+| **A-15** | El **423** del login muestra mensaje propio | Se prioriza que el usuario bloqueado entienda por qué no entra. La fuga que revela es del backend y se arregla ahí |
+| **A-16** | El **403 `CONSENTIMIENTO_REQUERIDO`** no borra la sesión | Tratarlo como 401 dejaría al usuario en un ciclo de login del que no sale |
 
 ---
 
@@ -140,6 +139,9 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | 6 | Warning de lint en `client.ts` (`import/no-named-as-default-member`, axios) | Cosmético | — |
 | 7 | **AUT-01 CA01 contradice RF-47/CON-01**: uno manda al dashboard tras el registro, el otro exige consentimiento antes de habilitar nada | **Alto** — son requisitos éticos del estudio | Corregir en `HistoriasUsuario.md` del backend; ver `ContenidoUI.md §8` |
 | 8 | Ícono y splash siguen siendo los de Expo | Medio — **bloquea el piloto**, no el desarrollo | `Iconografia.md §6` |
+| 9 | **El texto de consentimiento es un borrador sin aprobar** | **Alto — bloquea el piloto.** Es evidencia para el comité de ética (Ley 29733) | `TextoConsentimiento.md` |
+| 10 | No está definido si puede haber participantes **menores de edad** | **Alto** — cambiaría el procedimiento de consentimiento completo | `TextoConsentimiento.md §7` |
+| 11 | Enumeración de usuarios vía 423 (Issue nº1 del backend, abierto) | Medio — la UI lo expone por decisión A-15 | Se arregla en el backend |
 
 ---
 

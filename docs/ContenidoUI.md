@@ -14,7 +14,7 @@
 MiFi le habla a un **estudiante peruano** sobre su propia plata. Cuatro
 reglas:
 
-1. **Tuteo, cercano, sin ser infantil.** "Registrá tu primer movimiento",
+1. **Tuteo, cercano, sin ser infantil.** "Registra tu primer movimiento",
    no "Proceda a registrar su transacción".
 2. **Nunca juzgar.** La app muestra gastos hormiga; el estudiante ya sabe
    que gastó de más. "Tus compras chicas suman S/ 87 este mes" ≫ "Estás
@@ -23,11 +23,8 @@ reglas:
 4. **Sin jerga técnica.** Nunca "token", "sesión expirada", "error 500",
    "sincronización fallida".
 
-> **Nota sobre el voseo.** Los textos de abajo usan formas como "registrá"
-> y "tocá". Es una decisión pendiente de confirmar con el usuario: en Perú
-> lo natural es el tuteo ("registra", "toca"). **Si se confirma el tuteo,
-> se ajusta este documento y nada más** — los textos no están en el código
-> todavía. Ver §8.
+> **Decisión tomada:** los textos usan **tuteo** ("registra", "toca"),
+> que es lo natural en Perú y el registro que esperan los participantes.
 
 ---
 
@@ -54,7 +51,7 @@ egreso de un vistazo, que es lo que el estudiante viene a ver.
 ### 01 · Onboarding
 
 - **Título:** `Tu plata, siempre clara`
-- **Texto:** `Registrá tus gastos en segundos y descubrí a dónde se va tu
+- **Texto:** `Registra tus gastos en segundos y descubre a dónde se va tu
   dinero.`
 - **Botón:** `Continuar`
 
@@ -74,37 +71,49 @@ egreso de un vistazo, que es lo que el estudiante viene a ver.
 
 | Campo | Label | Placeholder | Ayuda |
 |:--|:--|:--|:--|
+| Nombre | `Nombre` | `¿Cómo te llamamos?` | — |
 | Correo | `Correo` | `tucorreo@ejemplo.com` | — |
 | Contraseña | `Contraseña` | — | `Mínimo 8 caracteres` (visible siempre, no solo al fallar) |
 
-- **Botón:** `Crear cuenta` · **Enlace:** `¿Ya tenés cuenta? Iniciá sesión`
+- **Botón:** `Crear cuenta` · **Enlace:** `¿Ya tienes cuenta? Inicia sesión`
 
 **Validaciones** (en el cliente, antes de enviar):
 
 | Caso | Mensaje | Origen |
 |:--|:--|:--|
-| Correo vacío | `Ingresá tu correo` | — |
+| Nombre vacío | `Ingresa tu nombre` | contrato: `nombre` requerido |
+| Correo vacío | `Ingresa tu correo` | — |
 | Correo mal formado | `Ese correo no parece válido` | — |
 | Contraseña < 8 | `La contraseña necesita al menos 8 caracteres` | RF-03, CA03 |
-| Correo ya registrado (409) | `Ese correo ya está registrado. ¿Querés iniciar sesión?` | RF-02, CA02 |
+| Correo ya registrado (409) | `Ese correo ya está registrado. ¿Quieres iniciar sesión?` | RF-02, CA02 |
 
 ### 04 · Inicio de sesión
 
-- **Botón:** `Entrar` · **Enlace:** `¿Olvidaste tu contraseña?`
+- **Botón:** `Entrar` · **Enlace:** `¿No tienes cuenta? Crea una`
+- ~~`¿Olvidaste tu contraseña?`~~ — oculto en v1, ver §8
 
 | Caso | Mensaje | Origen |
 |:--|:--|:--|
 | Credenciales incorrectas (401) | `Correo o contraseña incorrectos` | AUT-02 **CA02** |
-| Cuenta bloqueada (423) | `Demasiados intentos. Esperá unos minutos antes de volver a probar.` | RF-07 |
-| Sin conexión | `No pudimos conectarnos. Revisá tu internet y tocá Reintentar.` | — |
+| Cuenta bloqueada (423) | `Demasiados intentos. Espera unos minutos antes de volver a probar.` | RF-07 |
+| Sin conexión | `No pudimos conectarnos. Revisa tu internet y toca Reintentar.` | — |
 
 ⚠️ **El mensaje de credenciales es genérico a propósito** (CA02): nunca
 decir "el correo no existe" ni "la contraseña es incorrecta". Revelar cuál
 de los dos falló le confirma a un atacante qué correos están registrados.
 
-> **`¿Olvidaste tu contraseña?` no tiene endpoint.** No hay RF de
-> recuperación ni ruta en el contrato. Decisión pendiente (§8): ocultarlo
-> en v1, o dejarlo mostrando un aviso de contactar al investigador.
+⚠️ **El 423 sí muestra un mensaje distinto — decisión consciente.** La
+auditoría OWASP del backend registró que responder 423 revela que la cuenta
+existe (hallazgo nº 1, Issue abierto). Se eligió igual mostrar un mensaje
+propio, porque un usuario legítimamente bloqueado que ve "correo o
+contraseña incorrectos" reintenta sin entender y se frustra — y esa
+frustración termina en el puntaje SUS. **El arreglo real es del backend**
+(no distinguir el estado, o aplicar rate limiting uniforme); la UI no puede
+tapar una fuga que ya está en la respuesta HTTP.
+
+> **`¿Olvidaste tu contraseña?` se oculta en v1** (§8). No hay RF de
+> recuperación ni ruta en el contrato, y un enlace que no lleva a ningún
+> lado es exactamente lo que castiga el SUS.
 
 ---
 
@@ -120,7 +129,7 @@ de los dos falló le confirma a un atacante qué correos están registrados.
 **Estado vacío** (usuario nuevo — la primera pantalla real que ve):
 
 > **Título:** `Todavía no hay movimientos`
-> **Texto:** `Registrá tu primer gasto o ingreso y vas a ver acá el resumen
+> **Texto:** `Registra tu primer gasto o ingreso y vas a ver aquí el resumen
 > de tu mes.`
 > **Botón:** `Registrar movimiento`
 
@@ -130,8 +139,8 @@ tesis mide.
 
 ### 05b · Elegir cómo registrar
 
-- **Título:** `¿Cómo querés registrarlo?`
-- **Opciones:** `Manual` (`Escribí el monto`) · `Escanear boleta` (`La
+- **Título:** `¿Cómo quieres registrarlo?`
+- **Opciones:** `Manual` (`Escribe el monto`) · `Escanear boleta` (`La
   cámara lee el monto`) · `Desde mi correo` (`{n} por confirmar`)
 
 ### 06 · Registrar transacción manual
@@ -141,10 +150,10 @@ tesis mide.
 
 | Caso | Mensaje |
 |:--|:--|
-| Monto vacío o cero | `Ingresá un monto mayor a cero` |
-| Sin categoría | `Elegí una categoría` |
-| Fecha futura | `No podés registrar un movimiento con fecha futura` |
-| Falla al guardar | `No pudimos guardar el movimiento. Tocá Reintentar.` |
+| Monto vacío o cero | `Ingresa un monto mayor a cero` |
+| Sin categoría | `Elige una categoría` |
+| Fecha futura | `No puedes registrar un movimiento con fecha futura` |
+| Falla al guardar | `No pudimos guardar el movimiento. Toca Reintentar.` |
 
 **Confirmación al guardar:** `Movimiento guardado` (breve, no bloqueante).
 
@@ -155,10 +164,10 @@ tesis mide.
 - **Origen de cada ítem:** `Manual` · `Boleta` · `Correo`
 
 **Vacíos:**
-- Sin movimientos: `Acá van a aparecer tus movimientos` / `Registrá el
+- Sin movimientos: `Aquí van a aparecer tus movimientos` / `Registra el
   primero para empezar.`
-- Sin resultados de búsqueda: `Sin resultados para "{búsqueda}"` / `Probá
-  con otra palabra o cambiá el mes.`
+- Sin resultados de búsqueda: `Sin resultados para "{búsqueda}"` / `Prueba
+  con otra palabra o cambia el mes.`
 
 **Eliminar** (TRX-02) pide confirmación: `¿Eliminar este movimiento?` /
 `Esta acción no se puede deshacer.` → `Eliminar` / `Cancelar`.
@@ -170,21 +179,21 @@ tesis mide.
 ### 12 · Metas de ahorro
 
 - **Resumen:** `% ahorrado en total` · **Sin fecha:** `Sin fecha límite` (D-14)
-- **Vacío:** `Todavía no tenés metas` / `Poné un objetivo y mirá cómo vas
+- **Vacío:** `Todavía no tienes metas` / `Pon un objetivo y mira cómo vas
   avanzando.` → `Crear meta`
 
 ### 13 · Crear meta
 
-- **Campos:** `¿Cuánto querés ahorrar?` · `¿Para qué es?` ·
+- **Campos:** `¿Cuánto quieres ahorrar?` · `¿Para qué es?` ·
   `Fecha límite (opcional)` con atajos `3 meses` / `5 meses` / `1 año`
-- **Proyección:** `Ahorrando S/ {x} por semana llegás el {fecha}`
-- **Errores:** `Ingresá un monto mayor a cero` · `Poné un nombre a tu meta`
+- **Proyección:** `Ahorrando S/ {x} por semana llegas el {fecha}`
+- **Errores:** `Ingresa un monto mayor a cero` · `Pon un nombre a tu meta`
   · `La fecha límite tiene que ser futura` (RF-31)
 
 ### 14 · Categorías
 
 - **Vacío:** `Sin gastos este periodo` / `Cuando registres egresos, vas a
-  ver acá en qué se te va la plata.`
+  ver aquí en qué se te va la plata.`
 
 ### 15 · Gastos hormiga ⚠️
 
@@ -194,7 +203,7 @@ la UI no puede mezclar:**
 | Marca | Texto | Editable |
 |:--|:--|:--|
 | Automática (RF-38) | `Detectado por monto` | **No** |
-| Del estudiante (RF-55) | `Vos lo marcaste` | Sí |
+| Del estudiante (RF-55) | `Tú lo marcaste` | Sí |
 
 - **Título del dato:** `{n} % de tus egresos fueron compras chicas`
 - **Equivalencia:** `Es como {x} semanas de tu meta` — motivacional, no
@@ -202,7 +211,7 @@ la UI no puede mezclar:**
 - **CTA:** `Ponerle un límite semanal`
 - **Si el estudiante intenta editar la automática:**
   `Esta marca es automática: se aplica a todo gasto menor a S/ {umbral}.
-  Podés agregar tu propia marca aparte.`
+  Puedes agregar tu propia marca aparte.`
 - **Vacío:** `No detectamos compras chicas este periodo` / `Se marcan
   automáticamente los gastos menores a S/ {umbral}.`
 
@@ -212,13 +221,13 @@ la UI no puede mezclar:**
 
 | Situación | Mensaje | Acción |
 |:--|:--|:--|
-| Sin conexión | `Sin conexión. Revisá tu internet.` | `Reintentar` |
-| Servidor caído (5xx) | `Algo falló de nuestro lado. Probá de nuevo en unos minutos.` | `Reintentar` |
-| Sesión vencida (401) | `Tu sesión terminó. Iniciá sesión de nuevo.` | va a login |
+| Sin conexión | `Sin conexión. Revisa tu internet.` | `Reintentar` |
+| Servidor caído (5xx) | `Algo falló de nuestro lado. Prueba de nuevo en unos minutos.` | `Reintentar` |
+| Sesión vencida (401) | `Tu sesión terminó. Inicia sesión de nuevo.` | va a login |
 | Recurso inexistente (404) | `No encontramos lo que buscabas.` | volver |
 | Carga | Esqueleto de la pantalla, **no** un spinner a pantalla completa | — |
 
-⚠️ **El 404 dice "no encontramos", nunca "no tenés permiso".** El backend
+⚠️ **El 404 dice "no encontramos", nunca "no tienes permiso".** El backend
 responde 404 también cuando el recurso es de otro usuario (D-05, anti-IDOR)
 justamente para no revelar que existe. Si la UI dijera "sin permiso",
 anularía esa protección.
@@ -241,26 +250,24 @@ estudiante y puede filtrar información.
 
 ---
 
-## 8. Decisiones pendientes (bloquean A1)
+## 8. Decisiones tomadas antes de A1
 
-| # | Decisión | Recomendación |
+| # | Decisión | Resolución |
 |:--|:--|:--|
-| 1 | **Voseo o tuteo** | **Tuteo** (`registra`, `toca`): es lo natural en Perú y los participantes son peruanos. Ajustar este documento si se confirma. |
-| 2 | **`¿Olvidaste tu contraseña?`** — no hay RF ni endpoint | **Ocultarlo en v1.** Mostrar un enlace que no lleva a ningún lado es exactamente lo que castiga el SUS. |
-| 3 | **Tras el registro, ¿a dónde va?** | Ver el conflicto de abajo. |
+| 1 | Voseo o tuteo | **Tuteo.** Es el registro natural en Perú. Aplicado en todo este documento. |
+| 2 | `¿Olvidaste tu contraseña?` | **Se oculta en v1.** No hay RF ni endpoint; un enlace que no lleva a ningún lado es exactamente lo que castiga el SUS. Se reevalúa si el backend agrega recuperación. |
+| 3 | Campo `nombre` en el registro | **Se agrega.** El contrato lo exige (`nombre` requerido en `/auth/registro`) y el dashboard lo usa en el saludo. Corregir `Wireframes.md` en el backend. |
+| 4 | Mensaje del 423 en login | **Mensaje propio**, aun sabiendo que mantiene visible la fuga del backend. Ver la advertencia en §3. |
+| 5 | Tras el registro, ¿dashboard o consentimiento? | **Consentimiento.** Lo resuelve el contrato, no la interpretación: el `201` de `/auth/registro` dice que el acceso financiero queda bloqueado hasta aceptar (RF-49). |
 
-### ⚠️ Conflicto documentado entre criterios de aceptación
+### ⚠️ Corrección pendiente en el paquete de diseño (backend)
 
-- **AUT-01 CA01** dice que tras registrarse *"el sistema crea la cuenta y lo
-  redirige al **dashboard principal**"*.
-- **CON-01 CA01** y **RF-47** dicen que el consentimiento se muestra *"tras
-  el registro y **antes de habilitar cualquier funcionalidad
-  financiera**"*.
+**AUT-01 CA01** dice que tras registrarse *"el sistema crea la cuenta y lo
+redirige al **dashboard principal**"*, lo que contradice a **RF-47**,
+**RF-49** y al propio contrato OpenAPI. El criterio de aceptación se
+redactó sin considerar CON-01 y **hay que corregirlo en
+`HistoriasUsuario.md` del backend** — el frontend ya sigue lo correcto.
 
-**Los dos no pueden ser ciertos a la vez.** Resolución propuesta:
-**registro → consentimiento → dashboard**, porque RF-47 y RF-49 son
-explícitos y el consentimiento es un requisito ético del estudio, no una
-funcionalidad. AUT-01 CA01 se redactó sin considerar CON-01.
-
-Esto **hay que corregirlo en `HistoriasUsuario.md` del backend** (es la
-fuente de verdad), no solo acá. Queda anotado en la deuda técnica.
+El texto del consentimiento está en
+[`TextoConsentimiento.md`](TextoConsentimiento.md) — **borrador sin
+aprobar**.

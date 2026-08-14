@@ -31,6 +31,7 @@ sistema (historias, requerimientos, wireframes, contrato) vive en
 | [`Navegacion.md`](Navegacion.md) | Las 17 pantallas → rutas, guards de sesión y consentimiento, tab bar |
 | [`ContenidoUI.md`](ContenidoUI.md) | Textos exactos, estados vacíos, validaciones y mensajes de error |
 | [`Iconografia.md`](Iconografia.md) | Set de íconos, inventario por pantalla, regla de uso |
+| [`TextoConsentimiento.md`](TextoConsentimiento.md) | ⚠️ **Borrador sin aprobar.** El texto que firma el participante y su versión |
 | [`EstrategiaPruebas.md`](EstrategiaPruebas.md) | Qué se prueba, qué no, cobertura, reglas de MSW |
 | [`GUIA_INSTALACION.MD`](GUIA_INSTALACION.MD) | Instalación paso a paso y los tropiezos reales del stack |
 
