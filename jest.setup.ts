@@ -37,6 +37,13 @@ afterEach(() => {
   // Descarta los handlers que una prueba haya agregado con server.use(),
   // para que no se filtren a la siguiente.
   server.resetHandlers();
+
+  // Vacía el llavero simulado. `clearAllMocks` borra el registro de
+  // llamadas pero NO el Map de arriba: sin esto, un token guardado por una
+  // prueba sigue ahí en la siguiente y las pruebas pasan por el orden en
+  // que corren, no por lo que hacen.
+  (jest.requireMock("expo-secure-store") as { __almacen: Map<string, string> }).__almacen.clear();
+
   jest.clearAllMocks();
 });
 
