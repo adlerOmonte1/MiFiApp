@@ -74,6 +74,14 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      # expo-env.d.ts trae las declaraciones de tipos de los imports de CSS
+      # (global.css y los *.module.css). Lo genera `expo start`, que en CI no
+      # corre, y está en .gitignore porque su contenido depende del SDK. Sin
+      # este paso el typecheck falla con "Cannot find module './x.module.css'".
+      # Es una línea estable; no vale la pena levantar el dev server por ella.
+      - name: Generar expo-env.d.ts
+        run: printf '/// <reference types="expo/types" />\n' > expo-env.d.ts
+
       - name: Lint (ESLint)
         run: |
           npm run lint \

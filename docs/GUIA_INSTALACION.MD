@@ -469,6 +469,23 @@ corren exactamente la misma versión de Node.
 `EXPO_PUBLIC_API_URL` se define a nivel de workflow porque
 `src/api/client.ts` lanza al importarse si falta, y las pruebas lo importan.
 
+⚠️ **Hay que generar `expo-env.d.ts` en CI.** Es el mismo archivo del §5, y
+acá muerde de nuevo: está en `.gitignore` y lo genera `expo start`, que en
+CI no corre. Sin él, el typecheck falla con
+`Cannot find module './animated-icon.module.css'` — y como los pasos
+siguientes se saltean en cascada, a primera vista parece que reventó medio
+workflow cuando en realidad falló una sola cosa.
+
+```yaml
+- name: Generar expo-env.d.ts
+  run: printf '/// <reference types="expo/types" />\n' > expo-env.d.ts
+```
+
+`npx expo customize` **no** sirve para esto: solo acepta `babel.config.js`,
+`metro.config.js`, `tsconfig.json`, `eslint.config.js` y algunos más. La
+alternativa sería versionar el archivo, pero su contenido depende del SDK,
+así que es preferible generarlo.
+
 ---
 
 ## 10. Estructura del repositorio
