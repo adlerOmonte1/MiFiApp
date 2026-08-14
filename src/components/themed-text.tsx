@@ -1,73 +1,57 @@
-import { Platform, StyleSheet, Text, type TextProps } from "react-native";
+import { Text, type TextProps } from "react-native";
 
-import { Fonts, ThemeColor } from "@/constants/theme";
+import { TextoVariantes, type ThemeColor, type VarianteTexto } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
+/**
+ * Texto de la app. Es la única forma de escribir texto en MiFiApp.
+ *
+ * Un componente pide una VARIANTE semántica (`variante="monto"`), nunca un
+ * tamaño ni un peso. Así, ajustar la escala tipográfica es editar
+ * `TextoVariantes` en el tema y las 17 pantallas se acomodan solas.
+ *
+ * Ojo con los pesos: con fuentes cargadas, cada peso de Nunito es una
+ * familia distinta. `fontWeight` no engorda el texto — por eso las
+ * variantes traen `fontFamily` y acá no se toca el peso.
+ *
+ * `type` es el nombre del andamiaje de Expo; se mantiene mapeado para no
+ * romper los componentes del template. En código nuevo usá `variante`.
+ */
+
+/** Traducción de los nombres del andamiaje a las variantes del sistema. */
+const VARIANTE_POR_TIPO = {
+  default: "cuerpo",
+  title: "monto",
+  subtitle: "titulo",
+  small: "etiqueta",
+  smallBold: "etiquetaFuerte",
+  link: "etiqueta",
+  linkPrimary: "etiqueta",
+  code: "mono",
+} as const satisfies Record<string, VarianteTexto>;
+
+export type TipoTextoLegado = keyof typeof VARIANTE_POR_TIPO;
+
 export type ThemedTextProps = TextProps & {
-  type?: "default" | "title" | "small" | "smallBold" | "subtitle" | "link" | "linkPrimary" | "code";
+  /** Variante del sistema de diseño. Preferí esta a `type`. */
+  variante?: VarianteTexto;
+  /** @deprecated Nombre del andamiaje de Expo. Usá `variante`. */
+  type?: TipoTextoLegado;
+  /** Token de color del tema. Por defecto, el texto principal. */
   themeColor?: ThemeColor;
 };
 
-export function ThemedText({ style, type = "default", themeColor, ...rest }: ThemedTextProps) {
+export function ThemedText({ style, variante, type, themeColor, ...rest }: ThemedTextProps) {
   const theme = useTheme();
 
-  return (
-    <Text
-      style={[
-        { color: theme[themeColor ?? "text"] },
-        type === "default" && styles.default,
-        type === "title" && styles.title,
-        type === "small" && styles.small,
-        type === "smallBold" && styles.smallBold,
-        type === "subtitle" && styles.subtitle,
-        type === "link" && styles.link,
-        type === "linkPrimary" && styles.linkPrimary,
-        type === "code" && styles.code,
-        style,
-      ]}
-      {...rest}
-    />
-  );
-}
+  const varianteFinal: VarianteTexto = variante ?? (type ? VARIANTE_POR_TIPO[type] : "cuerpo");
 
-const styles = StyleSheet.create({
-  small: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 500,
-  },
-  smallBold: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 700,
-  },
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: 500,
-  },
-  title: {
-    fontSize: 48,
-    fontWeight: 600,
-    lineHeight: 52,
-  },
-  subtitle: {
-    fontSize: 32,
-    lineHeight: 44,
-    fontWeight: 600,
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 14,
-  },
-  linkPrimary: {
-    lineHeight: 30,
-    fontSize: 14,
-    color: "#3c87f7",
-  },
-  code: {
-    fontFamily: Fonts.mono,
-    fontWeight: Platform.select({ android: 700 }) ?? 500,
-    fontSize: 12,
-  },
-});
+  // Los links llevan el color de marca aunque no se pida themeColor: es la
+  // señal de "esto se toca" en toda la app. Se usa `primarioTexto` (el verde
+  // oscuro) y no `primario`, porque es texto sobre fondo claro y el verde
+  // brillante no llega al contraste de WCAG AA.
+  const esLink = type === "link" || type === "linkPrimary";
+  const color = themeColor ? theme[themeColor] : esLink ? theme.primarioTexto : theme.texto;
+
+  return <Text style={[{ color }, TextoVariantes[varianteFinal], style]} {...rest} />;
+}
