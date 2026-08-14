@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react-native";
 
+import { TextoVariantes } from "@/constants/theme";
+
 import { ThemedText } from "./themed-text";
 
 // Prueba de humo del renderizado: verifica que jest-expo puede montar un
@@ -17,9 +19,18 @@ describe("ThemedText", () => {
     expect(screen.getByText("Hola MiFi")).toBeOnTheScreen();
   });
 
-  it("aplica el tamaño del tipo pedido", async () => {
+  it("aplica la variante del sistema de diseño, no un tamaño suelto", async () => {
+    await render(<ThemedText variante="monto">S/ 1.234</ThemedText>);
+
+    // Se compara contra el token, no contra un número mágico: si mañana se
+    // ajusta la escala tipográfica, esta prueba sigue siendo válida en vez
+    // de romperse por un cambio de diseño legítimo.
+    expect(screen.getByText("S/ 1.234")).toHaveStyle(TextoVariantes.monto);
+  });
+
+  it("mapea los nombres del andamiaje a variantes del sistema", async () => {
     await render(<ThemedText type="title">Título</ThemedText>);
 
-    expect(screen.getByText("Título")).toHaveStyle({ fontSize: 48 });
+    expect(screen.getByText("Título")).toHaveStyle(TextoVariantes.monto);
   });
 });

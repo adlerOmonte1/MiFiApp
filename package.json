@@ -3,6 +3,8 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@expo-google-fonts/jetbrains-mono": "^0.4.1",
+    "@expo-google-fonts/nunito": "^0.4.2",
     "@expo/ui": "~57.0.10",
     "@tanstack/react-query": "^5.101.4",
     "axios": "^1.19.0",
@@ -61,7 +63,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "sync:contract": "node ./scripts/sync-contract.mjs"
+    "sync:contract": "node ./scripts/sync-contract.mjs",
+    "sync:design": "node ./scripts/sync-design.mjs",
+    "sync:upstream": "npm run sync:contract && npm run sync:design"
   },
   "private": true
 }
