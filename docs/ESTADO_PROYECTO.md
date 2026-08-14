@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 13 de agosto de 2026 (apertura del sprint A1)
+> **Última actualización:** 13 de agosto de 2026 (A1.2 terminado)
 
 ---
 
@@ -21,19 +21,26 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fases 0 y 1 completas. Sprint A1 abierto, ningún paso empezado.**
+**Fases 0 y 1 completas. Sprint A1 en curso: 2 de 6 pasos.**
 
-Lo que existe es la base: el proyecto configurado y verificado, el sistema
-de diseño implementado en código, y toda la documentación de cómo se va a
-construir. `src/` sigue siendo el andamiaje de `create-expo-app` más el
-cliente de API — **todavía no se escribió ninguna pantalla**.
+Ya existen los componentes base del sistema de diseño y el store de sesión.
+**Todavía no se escribió ninguna pantalla** — las rutas siguen siendo el
+andamiaje de `create-expo-app`.
 
-**A1 — Fundaciones y autenticación.** Las decisiones previas están tomadas (A-12 a A-16
-en §6) y los 5 endpoints que A1 necesita existen y están probados en el
-backend contra Supabase real.
+**A1 — Fundaciones y autenticación**, en curso. Los 5 endpoints que
+necesita existen y están probados en el backend contra Supabase real.
 
-Los 6 pasos de A1 están en `PlanTrabajoFrontend.md §3`. Ninguno empezado
-todavía.
+| Paso | Estado |
+|:--|:--|
+| A1.1 Componentes base e íconos | ✅ verificado en simulador |
+| A1.2 Store de sesión + llavero | ✅ verificado en simulador |
+| A1.3 Interceptores de axios | ⏳ **siguiente** |
+| A1.4 Rutas y guards | ⏳ |
+| A1.5 Pantallas 03 y 04 | ⏳ |
+| A1.6 Pantallas 01 y 02 | ⏳ |
+
+30 pruebas pasando. El umbral de cobertura de RNF-18 quedó **activo** desde
+A1.2 sobre `src/stores/**` (hoy al 100%).
 
 ---
 
@@ -61,7 +68,7 @@ Todo verificado y en `main` (y `staging`).
 | Proyecto Expo aplanado a la raíz | ✅ |
 | Dependencias del stack | ✅ |
 | ESLint + Prettier + TS estricto | ✅ |
-| Jest + Testing Library + MSW | ✅ 6 pruebas pasando |
+| Jest + Testing Library + MSW | ✅ |
 | Contrato OpenAPI → tipos generados | ✅ 1544 líneas |
 | Paquete de diseño sincronizado | ✅ `npm run sync:upstream` |
 | CI en GitHub Actions | ✅ verde |
@@ -111,6 +118,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | **A-14** | La pantalla 03 lleva campo **Nombre** | El contrato lo exige y el dashboard lo usa en el saludo. Corregir `Wireframes.md` en el backend |
 | **A-15** | El **423** del login muestra mensaje propio | Se prioriza que el usuario bloqueado entienda por qué no entra. La fuga que revela es del backend y se arregla ahí |
 | **A-16** | El **403 `CONSENTIMIENTO_REQUERIDO`** no borra la sesión | Tratarlo como 401 dejaría al usuario en un ciclo de login del que no sale |
+| **A-17** | La sesión guarda **token + usuario** en el llavero, no solo el token | Permite decidir la ruta al arrancar sin una llamada de red. A1.3 agregará el refresco contra `/usuarios/me` |
+| **A-18** | Ante cualquier fallo del llavero, el resultado es **sin sesión** | Quedar en `desconocido` colgaría la app en el splash; dejar pasar sería peor |
 
 ---
 
