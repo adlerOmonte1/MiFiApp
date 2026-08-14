@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 13 de agosto de 2026 (A1.2 terminado)
+> **Última actualización:** 14 de agosto de 2026 (A1.3 terminado)
 
 ---
 
@@ -21,7 +21,7 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fases 0 y 1 completas. Sprint A1 en curso: 2 de 6 pasos.**
+**Fases 0 y 1 completas. Sprint A1 en curso: 3 de 6 pasos.**
 
 Ya existen los componentes base del sistema de diseño y el store de sesión.
 **Todavía no se escribió ninguna pantalla** — las rutas siguen siendo el
@@ -34,13 +34,13 @@ necesita existen y están probados en el backend contra Supabase real.
 |:--|:--|
 | A1.1 Componentes base e íconos | ✅ verificado en simulador |
 | A1.2 Store de sesión + llavero | ✅ verificado en simulador |
-| A1.3 Interceptores de axios | ⏳ **siguiente** |
-| A1.4 Rutas y guards | ⏳ |
+| A1.3 Interceptores de axios | ✅ verificado contra el backend real |
+| A1.4 Rutas y guards | ⏳ **siguiente** |
 | A1.5 Pantallas 03 y 04 | ⏳ |
 | A1.6 Pantallas 01 y 02 | ⏳ |
 
-30 pruebas pasando. El umbral de cobertura de RNF-18 quedó **activo** desde
-A1.2 sobre `src/stores/**` (hoy al 100%).
+51 pruebas pasando. El umbral de cobertura de RNF-18 está **activo** sobre
+`src/stores/**` y `src/api/**`.
 
 ---
 
@@ -120,6 +120,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | **A-16** | El **403 `CONSENTIMIENTO_REQUERIDO`** no borra la sesión | Tratarlo como 401 dejaría al usuario en un ciclo de login del que no sale |
 | **A-17** | La sesión guarda **token + usuario** en el llavero, no solo el token | Permite decidir la ruta al arrancar sin una llamada de red. A1.3 agregará el refresco contra `/usuarios/me` |
 | **A-18** | Ante cualquier fallo del llavero, el resultado es **sin sesión** | Quedar en `desconocido` colgaría la app en el splash; dejar pasar sería peor |
+| **A-19** | El interceptor **no navega**: solo cambia el estado de la sesión | Atar la red a la navegación dejaría dos lugares decidiendo a qué pantalla va el usuario. Los guards observan el estado y navegan |
+| **A-20** | Ningún `AxiosError` sale de `src/api/` | Hacia arriba viaja un `ErrorApi` con un `tipo` sobre el que se puede hacer `switch`; una pantalla no tiene por qué saber qué es un código HTTP |
 
 ---
 
