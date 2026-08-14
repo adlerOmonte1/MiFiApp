@@ -588,17 +588,21 @@ Verificado en la instalación real (macOS, Node 24.13.1, Expo SDK 57):
 | 6. Jest + Testing Library + MSW | ✅ 5 pruebas de humo pasando |
 | 7. Contrato y tipos generados | ✅ `sync:contract` genera 1544 líneas de tipos |
 | 8. Variables de entorno | ✅ |
-| 9. CI | ⏳ escrito y verificado localmente; **falta la primera corrida en GitHub** |
+| 9. CI | ✅ corrida verde en `main` y `staging` (commit `e04d83b`) |
 
 Pendientes, en orden:
 
-1. **Confirmar la primera corrida verde del CI** en GitHub. Es lo único de
-   esta guía que no se puede verificar localmente.
-2. **Agregar `required` al `openapi.yaml` del backend** (ver §7). Sin eso,
+1. **Agregar `required` al `openapi.yaml` del backend** (ver §7). Sin eso,
    la seguridad de tipos del cliente queda a medias.
-3. **Protecciones de rama** en `main` y `staging`: exigir CI en verde antes
+2. **Protecciones de rama** en `main` y `staging`: exigir CI en verde antes
    de mergear. Sin esto, el flujo de ramas es una convención, no una
-   garantía.
-4. **Activar el umbral de cobertura** (§6.6) cuando existan los stores y
+   garantía. Se configura en Settings → Branches del repo.
+3. **Activar el umbral de cobertura** (§6.6) cuando existan los stores y
    servicios.
-5. **Propagar las decisiones #1, #2 y #3 al ADR** en `MiFiBackend/docs`.
+4. **Propagar las decisiones #1, #2 y #3 al ADR** en `MiFiBackend/docs`.
+5. **Decidir la visibilidad de los repos.** El §2 dice "privado, igual que
+   el backend", pero hoy `MiFiApp` y `MiFiBackend` son **públicos** (ambos
+   responden a la API de GitHub sin autenticación). No hay secretos
+   commiteados —se verificó que en el backend solo está `.env.example`, y
+   que `.env` y `credentials.json` están ignorados—, así que no es una fuga;
+   pero conviene que sea una decisión tomada y no un descuido.
