@@ -120,6 +120,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
   inglés. Archivos en kebab-case.
 - **Pruebas junto al archivo** (`x.ts` + `x.test.ts`).
 - **Commits:** tipo en inglés, descripción en español, referencia al RF/HU.
+  **Breves: 1 o 2 líneas como máximo.** El detalle va en la documentación,
+  no en el mensaje del commit.
 - **Ramas:** `feature/*` → PR → `staging` → `main`.
 - **Estado:** TanStack Query para lo que vive en el backend; Zustand para
   lo que solo existe en el dispositivo.
