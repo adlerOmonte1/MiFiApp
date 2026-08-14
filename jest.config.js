@@ -62,6 +62,9 @@ module.exports = {
     "!src/**/*.test.{ts,tsx}",
     "!src/**/*.d.ts",
     "!src/api/schema.d.ts",
+    // Solo exporta tipos: no hay nada que ejecutar, y contarlo como 0%
+    // hunde el promedio del directorio sin significar nada.
+    "!src/api/tipos.ts",
     "!src/app/**",
     "!src/test-utils/**",
   ],
@@ -75,12 +78,13 @@ module.exports = {
   //
   // Solo se listan directorios que YA existen: Jest falla con "coverage data
   // not found" si una ruta del umbral no coincide con ningún archivo. Sumar
-  // `./src/services/**` al crearlo en A1.3.
+  // `./src/services/**` y `./src/hooks/**` al crearlos.
   //
   // `src/app/**` queda fuera a propósito: son rutas de composición y su
   // valor se verifica con pruebas de criterio de aceptación, no con un piso
   // de líneas cubiertas.
   coverageThreshold: {
     "./src/stores/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
+    "./src/api/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
   },
 };
