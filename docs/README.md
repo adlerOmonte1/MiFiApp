@@ -15,6 +15,8 @@ sistema (historias, requerimientos, wireframes, contrato) vive en
 | Saber qué se construye y en qué orden | [`PlanTrabajoFrontend.md`](PlanTrabajoFrontend.md) |
 | Construir una pantalla: colores, tipografía, forma | [`SistemaDiseno.md`](SistemaDiseno.md) |
 | Saber dónde va una ruta y quién puede acceder | [`Navegacion.md`](Navegacion.md) |
+| Escribir un texto, un error o un estado vacío | [`ContenidoUI.md`](ContenidoUI.md) |
+| Poner un ícono | [`Iconografia.md`](Iconografia.md) |
 | Escribir pruebas | [`EstrategiaPruebas.md`](EstrategiaPruebas.md) |
 
 ---
@@ -27,6 +29,8 @@ sistema (historias, requerimientos, wireframes, contrato) vive en
 | [`PlanTrabajoFrontend.md`](PlanTrabajoFrontend.md) | Fases, sprints A1–A7, entregables por paso, DoD, riesgos |
 | [`SistemaDiseno.md`](SistemaDiseno.md) | Paleta, tipografía, forma, contraste WCAG, reglas de usabilidad |
 | [`Navegacion.md`](Navegacion.md) | Las 17 pantallas → rutas, guards de sesión y consentimiento, tab bar |
+| [`ContenidoUI.md`](ContenidoUI.md) | Textos exactos, estados vacíos, validaciones y mensajes de error |
+| [`Iconografia.md`](Iconografia.md) | Set de íconos, inventario por pantalla, regla de uso |
 | [`EstrategiaPruebas.md`](EstrategiaPruebas.md) | Qué se prueba, qué no, cobertura, reglas de MSW |
 | [`GUIA_INSTALACION.MD`](GUIA_INSTALACION.MD) | Instalación paso a paso y los tropiezos reales del stack |
 

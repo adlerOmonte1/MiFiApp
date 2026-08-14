@@ -29,12 +29,12 @@ Estado del backend al escribir esto: **Sprints 1, 2 y 3 completos**
 | Fase | Contenido | Estado |
 |:--|:--|:--|
 | **F0 — Setup** | Repo, Expo, calidad, pruebas, CI, contrato | ✅ Completa |
-| **F1 — Diseño** | Sistema de diseño, navegación, estrategia de pruebas | 🔄 En curso |
-| **F2 — Desarrollo** | Sprints A1–A6 | ⏳ Pendiente |
+| **F1 — Diseño** | Sistema de diseño, navegación, contenido, iconografía, pruebas | ✅ Completa |
+| **F2 — Desarrollo** | Sprints A1–A7 | ⏳ **Siguiente** |
 | **F3 — QA** | ISO 25010, accesibilidad, SUS piloto | ⏳ Pendiente |
 | **F4 — Despliegue** | Build EAS, distribución a participantes | ⏳ Pendiente |
 
-Los sprints del frontend se numeran **A1…A6** (A de *app*) para no
+Los sprints del frontend se numeran **A1…A7** (A de *app*) para no
 confundirlos con los S1…S6 del backend.
 
 ---
@@ -47,11 +47,12 @@ confundirlos con los S1…S6 del backend.
 | 1.2 | `docs/Navegacion.md` — 17 pantallas → rutas y guards | ✅ |
 | 1.3 | `docs/EstrategiaPruebas.md` | ✅ |
 | 1.4 | `docs/ESTADO_PROYECTO.md` (documento vivo) | ✅ |
-| 1.5 | Set de íconos elegido | ⏳ |
-| 1.6 | Micro-copys y estados vacíos de los flujos B y D | ⏳ |
+| 1.5 | `docs/Iconografia.md` — set, inventario y regla de uso | ✅ |
+| 1.6 | `docs/ContenidoUI.md` — textos, estados y validaciones | ✅ |
 
-**1.5 y 1.6 no bloquean A1**, pero sí bloquean A2 en adelante: la pantalla
-06 (registro manual) ya necesita íconos de categoría y textos de error.
+**Fase 1 completa.** Quedan 4 decisiones del usuario antes de A1
+(`ESTADO_PROYECTO.md §2`): tuteo/voseo, el enlace de contraseña olvidada,
+confirmar Ionicons, y el conflicto AUT-01 CA01 vs RF-47.
 
 ---
 
@@ -134,7 +135,8 @@ hormiga"*.
 **Pantallas:** 08 Cámara · 09 Confirmar boleta · 10 Cola de sugerencias ·
 **HU:** OCR-01, CNF-01 · **RF:** 16–22
 
-Requiere permisos de cámara y los estados de error del OCR (pendiente 1.6).
+Requiere permisos de cámara. Los estados de error del OCR siguen sin
+definirse en `ContenidoUI.md`: se resuelven al abrir A5.
 **Nada se guarda sin confirmación del usuario** (CNF-01).
 
 ### A6 — Gmail (acelerador, recortable)
@@ -189,6 +191,6 @@ Un paso no está terminado hasta que:
 |:--|:--|:--|
 | El contrato casi no declara `required` | Los tipos generados son todos opcionales: la red de seguridad queda a medias | Agregar `required` en el `openapi.yaml` del backend |
 | Mezclar las dos marcas de gasto hormiga (D-15) | **Contamina la variable medida de la tesis** | UI explícitamente separada; prueba dedicada en A4 |
-| Micro-copys y estados vacíos sin definir | Bloquea A2 en adelante | Paso 1.6 antes de A2 |
+| **AUT-01 CA01 contradice RF-47**: dashboard vs consentimiento tras el registro | Alto — requisito ético del estudio | Resolver antes de A1; corregir la HU en el backend |
 | A5/A6 consumen el cronograma | Se llega sin tiempo al piloto | Checkpoint tras A4: son recortables |
 | Sin protecciones de rama | El flujo de PR es convención, no garantía | Configurar en GitHub |

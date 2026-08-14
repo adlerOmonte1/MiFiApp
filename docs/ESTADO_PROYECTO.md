@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 13 de agosto de 2026
+> **Última actualización:** 13 de agosto de 2026 (Fase 1 completa)
 
 ---
 
@@ -21,16 +21,27 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fase 1 (Diseño) casi completa. Todavía no se escribió ninguna pantalla.**
+**Fase 1 (Diseño) COMPLETA. Todavía no se escribió ninguna pantalla.**
 
 Lo que existe es la base: el proyecto configurado y verificado, el sistema
-de diseño implementado en código, y la documentación de cómo se va a
+de diseño implementado en código, y toda la documentación de cómo se va a
 construir. `src/` sigue siendo el andamiaje de `create-expo-app` más el
 cliente de API.
 
-**Lo siguiente:** cerrar los pasos 1.5 (íconos) y 1.6 (micro-copys y
-estados vacíos), y arrancar el sprint **A1 — Fundaciones y autenticación**
+**Lo siguiente: arrancar el sprint A1 — Fundaciones y autenticación**
 (`PlanTrabajoFrontend.md §3`).
+
+⚠️ **Antes de A1 hay 4 decisiones que dependen del usuario**, todas
+chicas pero que afectan el código que se escriba:
+
+1. **Tuteo o voseo** en los textos (`ContenidoUI.md §8`). Recomendado:
+   tuteo, que es lo natural en Perú.
+2. **`¿Olvidaste tu contraseña?`** no tiene RF ni endpoint. Recomendado:
+   ocultarlo en v1.
+3. **Confirmar Ionicons** como set de íconos (`Iconografia.md §3`).
+4. **Resolver el conflicto AUT-01 CA01 vs RF-47** (ver deuda técnica nº 7):
+   tras el registro, ¿dashboard o consentimiento? Recomendado:
+   consentimiento.
 
 ---
 
@@ -68,7 +79,7 @@ Detalle y tropiezos: `GUIA_INSTALACION.MD`.
 
 ---
 
-## 5. Fase 1 — Diseño: 🔄 EN CURSO
+## 5. Fase 1 — Diseño: ✅ COMPLETA
 
 | Paso | Entregable | Estado |
 |:--|:--|:--|
@@ -76,8 +87,10 @@ Detalle y tropiezos: `GUIA_INSTALACION.MD`.
 | 1.2 | `Navegacion.md` | ✅ |
 | 1.3 | `EstrategiaPruebas.md` | ✅ |
 | 1.4 | Este documento | ✅ |
-| 1.5 | Set de íconos | ⏳ **bloquea A2** |
-| 1.6 | Micro-copys y estados vacíos (flujos B y D) | ⏳ **bloquea A2** |
+| 1.5 | `Iconografia.md` — set, inventario y regla de uso | ✅ |
+| 1.6 | `ContenidoUI.md` — textos, estados y validaciones | ✅ |
+
+**Fase 1 cerrada.** Falta solo confirmar las 4 decisiones del §2.
 
 ---
 
@@ -125,6 +138,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | 4 | Sin pruebas E2E | Bajo por ahora | Reevaluar tras A2 |
 | 5 | Ambos repos son **públicos** (la guía asumía privados) | A confirmar | No hay secretos commiteados |
 | 6 | Warning de lint en `client.ts` (`import/no-named-as-default-member`, axios) | Cosmético | — |
+| 7 | **AUT-01 CA01 contradice RF-47/CON-01**: uno manda al dashboard tras el registro, el otro exige consentimiento antes de habilitar nada | **Alto** — son requisitos éticos del estudio | Corregir en `HistoriasUsuario.md` del backend; ver `ContenidoUI.md §8` |
+| 8 | Ícono y splash siguen siendo los de Expo | Medio — **bloquea el piloto**, no el desarrollo | `Iconografia.md §6` |
 
 ---
 
