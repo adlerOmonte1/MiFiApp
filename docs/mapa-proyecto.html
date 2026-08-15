@@ -1,0 +1,779 @@
+<title>MiFiApp — Mapa del proyecto</title>
+<style>
+  /* ─── Tokens: paleta light completa en :root ─── */
+  :root {
+    --ground:      #F7F9F8;
+    --surface:     #FFFFFF;
+    --surface-alt: #EEF3F1;
+    --ink:         #1D2320;
+    --ink-soft:    #5D6864;
+    --ink-faint:   #808B86;
+    --accent:      #04835F;
+    --accent-brand:#00A37A;
+    --accent-wash: #E7F3EE;
+    --warn:        #B45309;
+    --warn-wash:   #FBF0DF;
+    --rule:        #E0E7E4;
+    --rule-strong: #C9D4D0;
+    --shadow:      0 1px 2px rgba(29,35,32,.05), 0 8px 24px rgba(29,35,32,.05);
+
+    --f-display: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI Variable", system-ui, sans-serif;
+    --f-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --f-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --wrap: 72ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #101513;
+      --surface:     #171E1B;
+      --surface-alt: #1E2724;
+      --ink:         #E6EDEA;
+      --ink-soft:    #A3AFAA;
+      --ink-faint:   #7C8783;
+      --accent:      #4FCCA5;
+      --accent-brand:#3DBF9A;
+      --accent-wash: #16302A;
+      --warn:        #E0A458;
+      --warn-wash:   #2E2418;
+      --rule:        #26302C;
+      --rule-strong: #35423D;
+      --shadow:      0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #101513;
+    --surface:     #171E1B;
+    --surface-alt: #1E2724;
+    --ink:         #E6EDEA;
+    --ink-soft:    #A3AFAA;
+    --ink-faint:   #7C8783;
+    --accent:      #4FCCA5;
+    --accent-brand:#3DBF9A;
+    --accent-wash: #16302A;
+    --warn:        #E0A458;
+    --warn-wash:   #2E2418;
+    --rule:        #26302C;
+    --rule-strong: #35423D;
+    --shadow:      0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell { display: block; max-width: 1180px; margin: 0 auto; padding: 0 20px 96px; }
+  @media (min-width: 1040px) {
+    .shell { display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 56px; padding: 0 32px 120px; }
+  }
+
+  /* ─── Encabezado ─── */
+  header.top { grid-column: 1 / -1; padding: 56px 0 32px; border-bottom: 1px solid var(--rule); margin-bottom: 44px; }
+  .eyebrow {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--f-display); font-weight: 800; font-size: clamp(2.1rem, 5vw, 3.1rem);
+    line-height: 1.05; letter-spacing: -.02em; margin: 0 0 16px; text-wrap: balance;
+  }
+  .lede { font-size: 1.08rem; color: var(--ink-soft); max-width: var(--wrap); margin: 0 0 26px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--f-mono); font-size: 11.5px; padding: 5px 11px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--rule); color: var(--ink-soft);
+  }
+  .chip.on { background: var(--accent-wash); border-color: transparent; color: var(--accent); }
+  .chip.next { background: var(--warn-wash); border-color: transparent; color: var(--warn); }
+
+  /* ─── Índice lateral ─── */
+  nav.toc { display: none; }
+  @media (min-width: 1040px) {
+    nav.toc { display: block; align-self: start; position: sticky; top: 28px; padding-top: 4px; }
+    nav.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+    nav.toc a {
+      display: block; padding: 5px 0 5px 12px; font-size: 13.5px; color: var(--ink-faint);
+      text-decoration: none; border-left: 2px solid var(--rule); line-height: 1.35;
+    }
+    nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-left-color: var(--accent-brand); }
+  }
+
+  main { min-width: 0; }
+  section { scroll-margin-top: 24px; margin-bottom: 68px; }
+  h2 {
+    font-family: var(--f-display); font-weight: 800; font-size: 1.62rem; letter-spacing: -.015em;
+    margin: 0 0 6px; text-wrap: balance;
+  }
+  h2 .num {
+    font-family: var(--f-mono); font-size: .72em; font-weight: 500; color: var(--accent);
+    margin-right: 10px; letter-spacing: 0;
+  }
+  h3 {
+    font-family: var(--f-display); font-weight: 700; font-size: 1.12rem; letter-spacing: -.005em;
+    margin: 34px 0 8px; text-wrap: balance;
+  }
+  .sub { color: var(--ink-soft); font-size: .95rem; margin: 0 0 24px; max-width: var(--wrap); }
+  p { max-width: var(--wrap); margin: 0 0 14px; }
+  strong { font-weight: 650; }
+  code {
+    font-family: var(--f-mono); font-size: .87em; background: var(--surface-alt);
+    padding: 1.5px 5px; border-radius: 5px; color: var(--ink);
+  }
+  a { color: var(--accent); }
+
+  /* ─── Árbol de directorios ─── */
+  .tree {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 20px 22px; overflow-x: auto; box-shadow: var(--shadow); margin: 18px 0 24px;
+  }
+  .tree pre {
+    font-family: var(--f-mono); font-size: 12.6px; line-height: 1.85; margin: 0;
+    white-space: pre; color: var(--ink);
+  }
+  .tree .d  { color: var(--accent); font-weight: 600; }   /* directorio */
+  .tree .c  { color: var(--ink-faint); }                   /* comentario */
+  .tree .g  { color: var(--rule-strong); }                 /* guías ├ └ │ */
+  .tree .w  { color: var(--warn); }                        /* atención */
+
+  /* ─── Tablas ─── */
+  .tw { overflow-x: auto; margin: 18px 0 24px; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.2px; min-width: 460px; }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 500; background: var(--surface-alt);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td code { background: transparent; padding: 0; color: var(--accent); }
+
+  /* ─── Diagrama de capas ─── */
+  .layers { display: flex; flex-direction: column; gap: 0; margin: 20px 0 8px; max-width: 620px; }
+  .layer {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 13px 18px; position: relative;
+  }
+  .layer + .layer { margin-top: 26px; }
+  .layer + .layer::before {
+    content: "↓"; position: absolute; top: -23px; left: 26px;
+    font-size: 15px; color: var(--rule-strong); line-height: 1;
+  }
+  .layer .lname { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-weight: 600; }
+  .layer .lrole { font-size: 13.5px; color: var(--ink-soft); margin-top: 2px; }
+  .layer.edge { border-color: var(--rule-strong); border-style: dashed; }
+
+  /* ─── Pasos numerados (secuencia real) ─── */
+  ol.steps { list-style: none; counter-reset: s; margin: 20px 0 8px; padding: 0; max-width: var(--wrap); }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 18px 40px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 1px;
+    font-family: var(--f-mono); font-size: 11px; width: 23px; height: 23px;
+    display: grid; place-items: center; border-radius: 50%;
+    background: var(--accent-wash); color: var(--accent); font-weight: 600;
+  }
+  ol.steps li::after {
+    content: ""; position: absolute; left: 11px; top: 28px; bottom: 4px; width: 1px; background: var(--rule);
+  }
+  ol.steps li:last-child::after { display: none; }
+  ol.steps b { font-family: var(--f-mono); font-size: 13px; font-weight: 600; color: var(--ink); }
+
+  /* ─── Nota / advertencia ─── */
+  .note {
+    border-left: 2px solid var(--accent-brand); background: var(--accent-wash);
+    padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 20px 0; max-width: var(--wrap);
+  }
+  .note.warn { border-left-color: var(--warn); background: var(--warn-wash); }
+  .note p { margin: 0; font-size: 14.5px; }
+  .note p + p { margin-top: 8px; }
+  .note .tag {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 5px;
+  }
+  .note.warn .tag { color: var(--warn); }
+
+  /* ─── Reglas invariantes ─── */
+  .rules { list-style: none; margin: 20px 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .rules li {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 15px 18px; display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: start;
+  }
+  .rules .mark { font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 2px; }
+  .rules .rt { font-weight: 650; display: block; margin-bottom: 3px; }
+  .rules .rw { font-size: 14px; color: var(--ink-soft); }
+
+  ul.plain { max-width: var(--wrap); padding-left: 20px; }
+  ul.plain li { margin-bottom: 7px; }
+
+  footer {
+    grid-column: 1 / -1; border-top: 1px solid var(--rule); padding-top: 22px; margin-top: 20px;
+    font-size: 13px; color: var(--ink-faint); font-family: var(--f-mono);
+  }
+  :focus-visible { outline: 2px solid var(--accent-brand); outline-offset: 3px; border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="shell">
+
+  <header class="top">
+    <p class="eyebrow">Cliente móvil · Expo SDK 57 · TypeScript</p>
+    <h1>MiFiApp — mapa del proyecto</h1>
+    <p class="lede">
+      Cómo está organizado el frontend de MiFi: qué hay en cada carpeta, qué archivo va dónde,
+      y por qué las piezas están separadas así. MiFi es una app de finanzas personales para
+      estudiantes y, a la vez, el <strong>instrumento de medición de una tesis</strong> — eso explica
+      buena parte de las decisiones que siguen.
+    </p>
+    <div class="chips">
+      <span class="chip on">Fase 0 · Setup completa</span>
+      <span class="chip on">Fase 1 · Diseño completa</span>
+      <span class="chip next">Fase 2 · Sprint A1 — siguiente</span>
+      <span class="chip">0 pantallas escritas</span>
+      <span class="chip">9 documentos · 6 skills</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Índice">
+    <ol>
+      <li><a href="#contexto">Contexto y los dos repos</a></li>
+      <li><a href="#arbol">El árbol completo</a></li>
+      <li><a href="#capas">Las capas</a></li>
+      <li><a href="#recorrido">Recorrido de un dato</a></li>
+      <li><a href="#carpetas">Carpeta por carpeta</a></li>
+      <li><a href="#raiz">Archivos de la raíz</a></li>
+      <li><a href="#diseno">El sistema de diseño</a></li>
+      <li><a href="#docs">La documentación</a></li>
+      <li><a href="#skills">Las skills</a></li>
+      <li><a href="#sprints">Los sprints</a></li>
+      <li><a href="#reglas">Reglas que no se rompen</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- ───────────────────────── -->
+    <section id="contexto">
+      <h2>Contexto y los dos repos</h2>
+      <p class="sub">Por qué el frontend está separado y qué consume del backend.</p>
+
+      <p>
+        El sistema son <strong>dos repositorios independientes</strong>. Se separaron para que tengan
+        ciclos de vida, CI y despliegue propios.
+      </p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Repositorio</th><th>Qué contiene</th><th>Rol frente al otro</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>MiFiBackend</code></td>
+              <td>API en Node + Express + Prisma. Además, <strong>todo el paquete de diseño</strong>: historias de usuario, requerimientos, wireframes, contrato OpenAPI, decisiones ADR.</td>
+              <td>Fuente de verdad. El frontend no discute lo que dice.</td>
+            </tr>
+            <tr>
+              <td><code>MiFiApp</code></td>
+              <td>Este repo. Cliente móvil que consume esa API.</td>
+              <td>Consume el diseño y el contrato; no los duplica a mano.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        La documentación de diseño <strong>no se copia manualmente</strong>. Dos comandos la traen y
+        la mantienen sincronizada:
+      </p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Comando</th><th>Qué hace</th><th>Deja</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>npm run sync:contract</code></td>
+              <td>Baja <code>openapi.yaml</code> y genera los tipos TypeScript del cliente.</td>
+              <td><code>contracts/</code> y <code>src/api/schema.d.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>npm run sync:design</code></td>
+              <td>Baja los 10 documentos de diseño que el frontend consulta.</td>
+              <td><code>docs/upstream/</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="tag">Por qué importa</span>
+        <p>
+          Los tipos del cliente se <em>generan</em> del contrato, no se escriben. Si el backend
+          renombra un campo, <code>npm run typecheck</code> falla acá en cada lugar que lo usaba.
+          Esa es la red de seguridad principal del proyecto, y el CI verifica que no se haya
+          quedado desactualizada.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="arbol">
+      <h2>El árbol completo</h2>
+      <p class="sub">Todo el repo, sin <code>node_modules</code>. Lo que hoy no existe está marcado como pendiente del sprint que lo crea.</p>
+
+      <div class="tree">
+<pre><span class="d">MiFiApp/</span>
+<span class="g">│</span>
+<span class="g">├──</span> <span class="d">src/</span>                       <span class="c">todo el código de la app</span>
+<span class="g">│   ├──</span> <span class="d">api/</span>                   <span class="c">frontera con el backend</span>
+<span class="g">│   │   ├──</span> client.ts          <span class="c">instancia de axios + interceptores</span>
+<span class="g">│   │   ├──</span> client.test.ts
+<span class="g">│   │   ├──</span> schema.d.ts        <span class="w">GENERADO — nunca editar a mano</span>
+<span class="g">│   │   └──</span> tipos.ts           <span class="c">atajos sobre los tipos generados</span>
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">app/</span>                   <span class="c">rutas (expo-router: el archivo ES la ruta)</span>
+<span class="g">│   │   ├──</span> _layout.tsx        <span class="c">raíz: fuentes, providers, tema</span>
+<span class="g">│   │   ├──</span> <span class="d">(publico)/</span>         <span class="c">sin sesión — pendiente A1</span>
+<span class="g">│   │   ├──</span> consentimiento.tsx <span class="c">la compuerta — pendiente A1</span>
+<span class="g">│   │   └──</span> <span class="d">(privado)/</span>         <span class="c">guard de sesión — pendiente A1</span>
+<span class="g">│   │       ├──</span> <span class="d">(tabs)/</span>        <span class="c">las 4 pestañas</span>
+<span class="g">│   │       └──</span> <span class="d">registrar/</span>     <span class="c">alta de movimientos — A2</span>
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">components/</span>            <span class="c">UI reutilizable, sin lógica de negocio</span>
+<span class="g">│   │   ├──</span> themed-text.tsx    <span class="c">el ÚNICO texto de la app</span>
+<span class="g">│   │   ├──</span> themed-view.tsx
+<span class="g">│   │   └──</span> <span class="d">ui/</span>                <span class="c">primitivos: Boton, Campo… — A1</span>
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">constants/</span>
+<span class="g">│   │   └──</span> theme.ts           <span class="w">único lugar del proyecto con hex</span>
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">hooks/</span>                 <span class="c">estado de servidor y lógica de pantalla</span>
+<span class="g">│   │   ├──</span> use-theme.ts       <span class="c">única vía para leer colores</span>
+<span class="g">│   │   └──</span> use-color-scheme.ts
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">services/</span>              <span class="c">un archivo por recurso — pendiente A1</span>
+<span class="g">│   ├──</span> <span class="d">stores/</span>                <span class="c">Zustand: sesión, preferencias — A1</span>
+<span class="g">│   │</span>
+<span class="g">│   ├──</span> <span class="d">test-utils/</span>
+<span class="g">│   │   ├──</span> css-mock.js        <span class="c">Jest no entiende imports de CSS</span>
+<span class="g">│   │   └──</span> <span class="d">msw/</span>               <span class="c">dobles de la API, tipados del contrato</span>
+<span class="g">│   │</span>
+<span class="g">│   └──</span> global.css             <span class="c">solo web</span>
+<span class="g">│</span>
+<span class="g">├──</span> <span class="d">docs/</span>                      <span class="c">9 documentos propios</span>
+<span class="g">│   └──</span> <span class="d">upstream/</span>              <span class="w">COPIA DE SOLO LECTURA del backend</span>
+<span class="g">│</span>
+<span class="g">├──</span> <span class="d">contracts/</span>
+<span class="g">│   └──</span> openapi.yaml           <span class="c">bajado del backend, no se edita</span>
+<span class="g">│</span>
+<span class="g">├──</span> <span class="d">.claude/skills/</span>            <span class="c">6 skills que guían el desarrollo</span>
+<span class="g">├──</span> <span class="d">.github/workflows/</span>        <span class="c">ci.yml</span>
+<span class="g">├──</span> <span class="d">scripts/</span>                  <span class="c">sync-contract.mjs · sync-design.mjs</span>
+<span class="g">├──</span> <span class="d">assets/</span>                   <span class="c">imágenes e íconos</span>
+<span class="g">│</span>
+<span class="g">├──</span> theme/config <span class="c">de raíz →</span> app.json · tsconfig.json · eslint.config.js
+<span class="g">├──</span> jest.config.js · jest.env.ts · jest.setup.ts
+<span class="g">└──</span> .env.example · .nvmrc · .prettierrc.json · package.json</pre>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="capas">
+      <h2>Las capas</h2>
+      <p class="sub">Cuatro niveles, con las dependencias apuntando siempre hacia adentro.</p>
+
+      <p>
+        Es la misma idea del backend (dominio en el centro, infraestructura afuera), traducida a un
+        cliente móvil. Cada capa solo conoce a la de abajo:
+      </p>
+
+      <div class="layers">
+        <div class="layer">
+          <div class="lname">src/app/</div>
+          <div class="lrole">Pantallas. Solo composición: llaman a un hook y reparten props. Sin lógica.</div>
+        </div>
+        <div class="layer">
+          <div class="lname">src/hooks/</div>
+          <div class="lrole">Orquestan: caché, invalidación, estados de carga y error (TanStack Query).</div>
+        </div>
+        <div class="layer">
+          <div class="lname">src/services/</div>
+          <div class="lrole">Traducen dominio ↔ HTTP. Acá muere todo lo que sea rutas y códigos de estado.</div>
+        </div>
+        <div class="layer">
+          <div class="lname">src/api/</div>
+          <div class="lrole">Cliente axios y tipos generados del contrato.</div>
+        </div>
+        <div class="layer edge">
+          <div class="lname">MiFiBackend</div>
+          <div class="lrole">La API. Fuera de este repo.</div>
+        </div>
+      </div>
+
+      <p style="margin-top:26px">
+        <code>src/components/</code> y <code>src/stores/</code> viven al costado de esa pila:
+        los componentes reciben props y no conocen servicios ni rutas; los stores guardan lo que
+        solo existe en el dispositivo.
+      </p>
+
+      <h3>Las cuatro reglas de dependencia</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Regla</th><th>Por qué</th></tr></thead>
+          <tbody>
+            <tr><td>Una pantalla <strong>no</strong> llama a un servicio ni a <code>axios</code>: usa un hook.</td><td>Si importa un servicio, está mezclando composición con orquestación.</td></tr>
+            <tr><td>Un componente <strong>no</strong> importa de <code>services/</code>, <code>stores/</code> ni <code>app/</code>.</td><td>Así se prueba sin montar la app y se reusa entre pantallas.</td></tr>
+            <tr><td>Solo <code>services/</code> conoce la forma HTTP.</td><td>Hacia arriba viajan objetos de dominio y errores tipados, nunca un <code>AxiosError</code> crudo.</td></tr>
+            <tr><td><code>schema.d.ts</code> es generado y no se edita.</td><td>Si un tipo está mal, se arregla el contrato en el backend y se resincroniza.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="recorrido">
+      <h2>Recorrido de un dato</h2>
+      <p class="sub">Qué pasa, en orden, cuando el estudiante registra un gasto. Sirve para ubicar cualquier archivo nuevo.</p>
+
+      <ol class="steps">
+        <li><b>src/app/registrar/manual.tsx</b><br>La pantalla toma el monto y la categoría, y llama a <code>useCrearTransaccion()</code>. No sabe que existe HTTP.</li>
+        <li><b>src/hooks/use-transacciones.ts</b><br>El hook ejecuta la mutación y, al terminar, invalida las consultas del dashboard y de movimientos para que se refresquen solas.</li>
+        <li><b>src/services/transacciones.service.ts</b><br>Arma el cuerpo tipado desde el contrato y hace el POST. Traduce la respuesta a un objeto de dominio.</li>
+        <li><b>src/api/client.ts</b><br>El interceptor adjunta el JWT que vive en <code>expo-secure-store</code> y dispara la petición.</li>
+        <li><b>MiFiBackend</b><br>Valida, guarda, responde. Si el recurso fuera de otro usuario respondería <span style="color:var(--warn)">404</span>, nunca 403.</li>
+        <li><b>De vuelta</b><br>Query actualiza su caché; las pantallas suscritas se redibujan. Si vino un 401, el interceptor limpia la sesión y manda al login — no lo resuelve cada pantalla.</li>
+      </ol>
+
+      <div class="note">
+        <span class="tag">Cómo usar esto</span>
+        <p>
+          Cuando no sepas dónde va un archivo nuevo, ubicá en qué paso de este recorrido participa.
+          Si toca dos pasos, probablemente sean dos archivos.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="carpetas">
+      <h2>Carpeta por carpeta</h2>
+      <p class="sub">Qué entra, qué no entra, y cómo se llaman los archivos.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Carpeta</th><th>Qué va</th><th>Qué NO va</th><th>Nombre</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>src/api/</code></td>
+              <td>El cliente axios, sus interceptores y los tipos derivados del contrato.</td>
+              <td>Lógica de negocio. Llamadas concretas a endpoints.</td>
+              <td><code>client.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>src/app/</code></td>
+              <td>Una pantalla por archivo. El nombre del archivo <em>es</em> la URL.</td>
+              <td><code>axios</code>, <code>fetch</code>, comprobaciones de sesión.</td>
+              <td><code>gastos-hormiga.tsx</code></td>
+            </tr>
+            <tr>
+              <td><code>src/components/</code></td>
+              <td>UI que se reusa o que sacaba de la pantalla su legibilidad.</td>
+              <td>Imports de servicios, stores o rutas.</td>
+              <td><code>themed-text.tsx</code></td>
+            </tr>
+            <tr>
+              <td><code>src/components/ui/</code></td>
+              <td>Primitivos del sistema: <code>Boton</code>, <code>Campo</code>, <code>Tarjeta</code>, <code>Chip</code>, <code>Icono</code>.</td>
+              <td>Cualquier cosa atada a una pantalla concreta.</td>
+              <td><code>boton.tsx</code></td>
+            </tr>
+            <tr>
+              <td><code>src/constants/</code></td>
+              <td><code>theme.ts</code>: paleta, tipografía, espaciado, radios, sombras.</td>
+              <td>Constantes de negocio (esas salen del contrato).</td>
+              <td><code>theme.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>src/hooks/</code></td>
+              <td>Un hook por caso de uso de pantalla. Envuelven Query.</td>
+              <td>JSX. Llamadas directas a axios.</td>
+              <td><code>use-transacciones.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>src/services/</code></td>
+              <td>Un archivo por recurso de la API.</td>
+              <td>Estado de React. Caché.</td>
+              <td><code>metas.service.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>src/stores/</code></td>
+              <td>Zustand: sesión, preferencias, borradores.</td>
+              <td><strong>Datos que vienen del backend.</strong></td>
+              <td><code>sesion.store.ts</code></td>
+            </tr>
+            <tr>
+              <td><code>src/test-utils/</code></td>
+              <td>Servidor MSW, handlers y mocks compartidos.</td>
+              <td>Pruebas (van junto al archivo que prueban).</td>
+              <td><code>msw/handlers.ts</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Estado: la decisión que más se equivoca</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Tipo de estado</th><th>Herramienta</th><th>Ejemplos</th></tr></thead>
+          <tbody>
+            <tr><td>Vive en el backend</td><td><strong>TanStack Query</strong></td><td>transacciones, metas, dashboard, categorías</td></tr>
+            <tr><td>Solo existe en el dispositivo</td><td><strong>Zustand</strong></td><td>sesión y JWT, preferencias, borrador de formulario</td></tr>
+            <tr><td>Solo le importa a un componente</td><td><code>useState</code></td><td>si un acordeón está abierto</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Guardar en Zustand algo que viene del backend obliga a inventar a mano la invalidación que
+        Query ya trae resuelta, y termina en datos desincronizados.
+      </p>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="raiz">
+      <h2>Archivos de la raíz</h2>
+      <p class="sub">Qué hace cada uno y cuál conviene no tocar sin saber.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Archivo</th><th>Para qué</th></tr></thead>
+          <tbody>
+            <tr><td><code>app.json</code></td><td>Configuración de Expo: nombre, ícono, splash, plugins, esquema <code>mifiapp://</code>. Fija <code>userInterfaceStyle: "light"</code>.</td></tr>
+            <tr><td><code>package.json</code></td><td>Dependencias y los scripts: <code>lint</code>, <code>format</code>, <code>typecheck</code>, <code>test</code>, <code>sync:*</code>.</td></tr>
+            <tr><td><code>tsconfig.json</code></td><td>TypeScript estricto, más <code>noUncheckedIndexedAccess</code> y <code>exactOptionalPropertyTypes</code>. Define el alias <code>@/</code>.</td></tr>
+            <tr><td><code>eslint.config.js</code></td><td>Config de Expo + Prettier, <strong>más la regla que prohíbe colores y tamaños literales</strong> fuera del tema.</td></tr>
+            <tr><td><code>jest.config.js</code></td><td>Preset <code>jest-expo</code>. Contiene varios ajustes delicados: no tocar sin leer los comentarios.</td></tr>
+            <tr><td><code>jest.env.ts</code></td><td>Variables de entorno para las pruebas. Corre <em>antes</em> de cargar módulos.</td></tr>
+            <tr><td><code>jest.setup.ts</code></td><td>Arranca MSW y mockea <code>expo-secure-store</code>.</td></tr>
+            <tr><td><code>.env.example</code></td><td>Plantilla. El <code>.env</code> real está en <code>.gitignore</code>.</td></tr>
+            <tr><td><code>.nvmrc</code></td><td>Node 24. El CI lee este mismo archivo.</td></tr>
+            <tr><td><code>expo-env.d.ts</code></td><td>No versionado: lo genera Expo. Sin él, el typecheck falla por los imports de CSS.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <span class="tag">Cuidado</span>
+        <p>
+          <strong>Las variables <code>EXPO_PUBLIC_</code> se inyectan en texto plano en el bundle.</strong>
+          Cualquiera que descargue el <code>.apk</code> puede leerlas. Ahí van solo URLs y el
+          <code>client_id</code> de OAuth, que es público por diseño. Ningún secreto del backend
+          entra en este repo.
+        </p>
+        <p>
+          Además se leen al <em>arrancar</em> Metro: después de tocar el <code>.env</code> hay que
+          reiniciarlo, no hay recarga en caliente.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="diseno">
+      <h2>El sistema de diseño</h2>
+      <p class="sub">Tres niveles, para que cambiar la marca cueste una línea y no diecisiete pantallas.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Nivel</th><th>Qué es</th><th>Lo usan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1 · Paleta</strong></td><td>Valores crudos. El único lugar del proyecto con códigos hex.</td><td>Nadie fuera de <code>theme.ts</code></td></tr>
+            <tr><td><strong>2 · Colors</strong></td><td>Tokens semánticos: nombran el <em>rol</em> (<code>primario</code>), no el color (<code>verde</code>).</td><td>Componentes, vía <code>useTheme()</code></td></tr>
+            <tr><td><strong>3 · Variantes</strong></td><td>Combinaciones listas: <code>TextoVariantes</code>, <code>Sombras</code>, <code>ColoresCategoria</code>.</td><td>Componentes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Un componente pide <code>variante="monto"</code> o <code>theme.primario</code>, nunca un
+        número ni un hex. La indirección es lo que permite cambiar la identidad sin abrir una sola
+        pantalla — y <strong>lo hace cumplir ESLint</strong>, así que el CI falla si alguien apura un
+        color suelto. Documentarlo no alcanzaba: la convención se erosiona sola.
+      </p>
+
+      <p>
+        La misma regla aplicará a los íconos: ninguna pantalla nombrará un ícono del set, van todas
+        por un componente <code>&lt;Icono nombre="comida" /&gt;</code>.
+      </p>
+
+      <div class="note">
+        <span class="tag">Decisión con motivo de fondo</span>
+        <p>
+          <strong>La app es solo modo claro.</strong> No es una limitación técnica: como la
+          usabilidad se mide con un test SUS, todos los participantes tienen que ver exactamente la
+          misma interfaz. Si uno la usa en oscuro y otro en claro, sus puntajes no son comparables.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="docs">
+      <h2>La documentación</h2>
+      <p class="sub">Nueve documentos propios en <code>docs/</code>, más la copia de solo lectura del backend.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Documento</th><th>Responde</th></tr></thead>
+          <tbody>
+            <tr><td><code>ESTADO_PROYECTO.md</code></td><td><strong>Documento vivo.</strong> En qué paso quedamos, decisiones A-01 a A-11, deuda técnica. Se lee primero y se actualiza último.</td></tr>
+            <tr><td><code>PlanTrabajoFrontend.md</code></td><td>Fases, sprints A1–A7, entregables por paso, definición de terminado, riesgos.</td></tr>
+            <tr><td><code>SistemaDiseno.md</code></td><td>Paleta, tipografía, forma, contraste WCAG, reglas de usabilidad.</td></tr>
+            <tr><td><code>Navegacion.md</code></td><td>Las 17 pantallas → rutas, las tres zonas de acceso, tab bar.</td></tr>
+            <tr><td><code>ContenidoUI.md</code></td><td>Textos exactos, validaciones, mensajes de error, estados vacíos.</td></tr>
+            <tr><td><code>Iconografia.md</code></td><td>Set de íconos, inventario por pantalla, regla de uso.</td></tr>
+            <tr><td><code>EstrategiaPruebas.md</code></td><td>Qué se prueba, qué no, cobertura, reglas de MSW.</td></tr>
+            <tr><td><code>GUIA_INSTALACION.MD</code></td><td>Instalación paso a paso y los tropiezos reales del stack.</td></tr>
+            <tr><td><code>README.md</code></td><td>Índice: qué leer según lo que necesites.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        <code>docs/upstream/</code> es la copia del paquete de diseño del backend. Lleva una cabecera
+        que dice <em>no editar</em> en cada archivo, porque se sobrescribe entero en cada
+        sincronización. El más consultado es <code>Wireframes.md</code>: define los elementos de cada
+        una de las 17 pantallas.
+      </p>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="skills">
+      <h2>Las skills</h2>
+      <p class="sub">Seis instructivos en <code>.claude/skills/</code>. Se activan solas según la tarea.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Skill</th><th>Cuándo entra</th></tr></thead>
+          <tbody>
+            <tr><td><code>mifi-app-flujo-incremental</code></td><td>Toda sesión, desde el primer mensaje. Define <em>cómo</em> se trabaja.</td></tr>
+            <tr><td><code>mifi-app-contexto-diseno</code></td><td>Antes de implementar: qué documento consultar para no inventar.</td></tr>
+            <tr><td><code>mifi-app-arquitectura</code></td><td>Al escribir código: capas, carpetas, qué estado va dónde.</td></tr>
+            <tr><td><code>mifi-app-nueva-pantalla</code></td><td>Procedimiento de 8 pasos para agregar una pantalla.</td></tr>
+            <tr><td><code>mifi-app-sprint</code></td><td>Abrir, ejecutar y cerrar un sprint.</td></tr>
+            <tr><td><code>mifi-app-checklist-pr</code></td><td>Antes del commit final.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Son el espejo de las cinco <code>mifi-*</code> del backend, adaptadas al cliente. Llevan
+        incorporadas las trampas del stack que ya costaron tiempo, para no volver a pagarlas.
+      </p>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="sprints">
+      <h2>Los sprints</h2>
+      <p class="sub">Se numeran A1–A7 para no confundirlos con los S1–S6 del backend. El orden espeja el suyo: primero lo crítico, después los aceleradores.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Sprint</th><th>Pantallas</th><th>Entrega</th></tr></thead>
+          <tbody>
+            <tr><td><strong>A1</strong> Fundaciones y auth</td><td>01 · 02 · 03 · 04</td><td>Componentes base, store de sesión, interceptores, guards. Casi todo infraestructura.</td></tr>
+            <tr><td><strong>A2</strong> Núcleo</td><td>05 · 05b · 06 · 07</td><td>Registrar, editar y listar movimientos + dashboard. Produce el indicador <em>«registros por semana»</em>.</td></tr>
+            <tr><td><strong>A3</strong> Ahorro</td><td>12 · 13</td><td>Metas con fecha límite opcional. Produce <em>«monto ahorrado»</em>.</td></tr>
+            <tr><td><strong>A4</strong> Categorización</td><td>14 · 15</td><td>Categorías propias y gastos hormiga. Produce <em>«% de gastos hormiga»</em>.</td></tr>
+            <tr><td><strong>A5</strong> OCR</td><td>08 · 09 · 10</td><td>Cámara y confirmación. <em>Recortable.</em></td></tr>
+            <tr><td><strong>A6</strong> Gmail</td><td>11</td><td>OAuth con PKCE. <em>Recortable.</em></td></tr>
+            <tr><td><strong>A7</strong> Estudio y perfil</td><td>16 · 17</td><td>Encuesta SUS y perfil. <strong>No es opcional:</strong> el SUS mide la usabilidad de la tesis.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <span class="tag">Checkpoint tras A4</span>
+        <p>
+          Ahí está todo lo crítico y <strong>la tesis ya es viable</strong>. Si el cronograma
+          aprieta, A5 y A6 se congelan y se pasa directo a QA. Es una decisión prevista, no un
+          fracaso del plan.
+        </p>
+      </div>
+
+      <h3>Cuándo un paso está terminado</h3>
+      <p>Ocho condiciones, todas obligatorias:</p>
+      <ul class="plain">
+        <li><code>lint</code>, <code>format:check</code>, <code>typecheck</code> y <code>test:coverage</code> pasan.</li>
+        <li>Hay pruebas del camino feliz <strong>y</strong> de al menos un camino de error.</li>
+        <li>La pantalla resuelve sus tres estados: cargando, error y vacío.</li>
+        <li>Se <strong>vio funcionando en el simulador</strong>.</li>
+        <li>El código señala el RF/HU que le dio origen.</li>
+        <li>Todo supuesto no documentado está marcado y avisado.</li>
+        <li><code>ESTADO_PROYECTO.md</code> quedó actualizado.</li>
+        <li>El CI está verde.</li>
+      </ul>
+    </section>
+
+    <!-- ───────────────────────── -->
+    <section id="reglas">
+      <h2>Reglas que no se rompen</h2>
+      <p class="sub">Las invariantes del proyecto. Si algo las contradice, lo que está mal es lo otro.</p>
+
+      <ul class="rules">
+        <li>
+          <span class="mark">01</span>
+          <span>
+            <span class="rt">No se inventa nada</span>
+            <span class="rw">Lo que no esté en la documentación se declara como supuesto (<code>// SUPUESTO:</code>) y se avisa. Nunca en silencio. Es la regla de la que dependen todas las demás.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">02</span>
+          <span>
+            <span class="rt">Nada está listo porque compile</span>
+            <span class="rw">Las pruebas se corren de verdad y las pantallas se ven en el simulador. Un test en verde no prueba que el texto no esté cortado.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">03</span>
+          <span>
+            <span class="rt">Los comandos de git los corre el usuario</span>
+            <span class="rw">Decisión explícita del proyecto: quien desarrolla controla su propio historial. El agente prepara los cambios y entrega los comandos exactos.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">04</span>
+          <span>
+            <span class="rt">Trazabilidad en todo</span>
+            <span class="rw">Cada pieza de código señala el RF, HU o UC que la originó. Sin eso, en seis meses nadie sabe por qué existe.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">05</span>
+          <span>
+            <span class="rt">El JWT vive en el llavero del sistema</span>
+            <span class="rw"><code>expo-secure-store</code>, nunca AsyncStorage ni un store plano. Dura 7 días y el logout lo revoca del lado del servidor.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">06</span>
+          <span>
+            <span class="rt">Esconder un botón no es control de acceso</span>
+            <span class="rw">La autorización la hace el backend. La UI oculta cosas por usabilidad, no por seguridad. Un 404 se muestra como «no existe», nunca como «no tenés permiso» — decir lo segundo anularía la protección anti-IDOR del servidor.</span>
+          </span>
+        </li>
+        <li>
+          <span class="mark">07</span>
+          <span>
+            <span class="rt">La usabilidad es una variable medida</span>
+            <span class="rw">Un flujo confuso no es deuda estética: es ruido en los datos de la tesis. Por eso los textos, los estados vacíos y el contraste están decididos por escrito antes de escribir pantallas.</span>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <footer>
+      MiFiApp · mapa del proyecto · estado al 13 de agosto de 2026 · Fase 1 completa, Sprint A1 pendiente
+    </footer>
+
+  </main>
+</div>

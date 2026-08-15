@@ -53,8 +53,14 @@ npm run sync:upstream    # contrato + documentos de diseño
 | Qué actor puede hacer qué | `docs/upstream/DiagramaCasosUso.md` |
 | Cómo se conectan los componentes técnicos | `docs/upstream/DiagramaComponentes.md` |
 | **Consumir un endpoint: forma exacta de request/response** | `src/api/schema.d.ts` (generado del contrato) y `contracts/openapi.yaml` |
-| El "por qué" de una decisión (ADR D-01 a D-15) | `docs/upstream/README.md §6` |
-| Instalación, configuración, tropiezos del stack | `docs/GUIA_INSTALACION.MD` (este repo) |
+| El "por qué" de una decisión del sistema (D-01 a D-15) | `docs/upstream/README.md §6` |
+| El "por qué" de una decisión del frontend (A-01 a A-11) | `docs/ESTADO_PROYECTO.md §6` |
+| **Colores, tipografía, forma, contraste** | `docs/SistemaDiseno.md` |
+| **En qué ruta va una pantalla y quién accede** | `docs/Navegacion.md` |
+| Qué se construye y en qué orden (sprints A1–A7) | `docs/PlanTrabajoFrontend.md` |
+| Qué probar y cómo | `docs/EstrategiaPruebas.md` |
+| Índice de toda la documentación | `docs/README.md` |
+| Instalación, configuración, tropiezos del stack | `docs/GUIA_INSTALACION.MD` |
 
 ## Decisiones ADR que más pegan en el cliente
 

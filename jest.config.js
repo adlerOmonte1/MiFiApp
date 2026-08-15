@@ -62,6 +62,9 @@ module.exports = {
     "!src/**/*.test.{ts,tsx}",
     "!src/**/*.d.ts",
     "!src/api/schema.d.ts",
+    // Solo exporta tipos: no hay nada que ejecutar, y contarlo como 0%
+    // hunde el promedio del directorio sin significar nada.
+    "!src/api/tipos.ts",
     "!src/app/**",
     "!src/test-utils/**",
   ],
@@ -70,20 +73,18 @@ module.exports = {
   passWithNoTests: true,
 
   // Espejo de RNF-18 (MiFiBackend/docs/RequerimientosNoFuncionales.md): 70%
-  // sobre la lógica propia. Queda DESACTIVADO a propósito hasta que exista
-  // esa lógica.
+  // sobre la lógica propia. ACTIVO desde A1.2, que es cuando apareció esa
+  // lógica (`src/stores/`).
   //
-  // Por qué: hoy `src/` es solo el andamiaje de create-expo-app. Activarlo
-  // ahora hace fallar el CI en todos los PRs por no cubrir hooks del
-  // template (use-color-scheme.web.ts ni siquiera corre fuera de web), y un
-  // umbral que se ignora porque siempre está en rojo no protege nada.
+  // Solo se listan directorios que YA existen: Jest falla con "coverage data
+  // not found" si una ruta del umbral no coincide con ningún archivo. Sumar
+  // `./src/services/**` y `./src/hooks/**` al crearlos.
   //
-  // ACTIVARLO en el sprint que introduzca los stores de Zustand y los
-  // servicios de API — ahí empieza la lógica que RNF-18 realmente cubre.
-  // Descomentar y ajustar las rutas a las que existan en ese momento:
-  //
-  // coverageThreshold: {
-  //   "./src/stores/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
-  //   "./src/services/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
-  // },
+  // `src/app/**` queda fuera a propósito: son rutas de composición y su
+  // valor se verifica con pruebas de criterio de aceptación, no con un piso
+  // de líneas cubiertas.
+  coverageThreshold: {
+    "./src/stores/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
+    "./src/api/**": { branches: 70, functions: 70, lines: 70, statements: 70 },
+  },
 };

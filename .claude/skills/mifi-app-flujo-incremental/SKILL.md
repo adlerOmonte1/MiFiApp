@@ -23,7 +23,8 @@ las reglas de fondo son idénticas.
 3. Corré `git status` y `git log --oneline -8` — confirmá que el repo
    coincide con lo que dicen esos documentos. Si no coincide, avisá antes
    de seguir.
-4. Cargá `mifi-app-contexto-diseno` para saber qué documento consultar.
+4. Cargá `mifi-app-contexto-diseno` para saber qué documento consultar, y
+   `mifi-app-sprint` si vas a abrir, seguir o cerrar un sprint.
 
 ## Qué significa "supervisado" acá
 

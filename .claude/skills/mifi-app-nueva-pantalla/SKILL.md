@@ -53,9 +53,16 @@ Una pantalla no debería tener que pensar en caché.
 
 ## 3. La pantalla (`src/app/`)
 
-El archivo **es** la ruta (expo-router). Solo composición: llama al hook,
-reparte props a componentes. Si aparece un `axios` o un `fetch` acá, algo
-se saltó una capa.
+El archivo **es** la ruta (expo-router). **La ruta exacta y su zona
+(pública / compuerta / privada) están decididas en `docs/Navegacion.md`**:
+no inventes una ruta nueva ni agregues comprobaciones de sesión en la
+pantalla — los guards viven en el layout de la zona, una sola vez.
+
+Solo composición: llama al hook, reparte props a componentes. Si aparece un
+`axios` o un `fetch` acá, algo se saltó una capa.
+
+Colores, tipografía y espaciados salen de `docs/SistemaDiseno.md` (y ESLint
+rechaza los literales).
 
 Los tres estados son obligatorios, no opcionales:
 
