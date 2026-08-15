@@ -157,6 +157,24 @@ registrada en `ESTADO_PROYECTO.md`.
 
 ## 9. Pendiente
 
+- **`expo-router/testing-library` (`renderRouter`) se probó y se
+  descartó en A1.4.** Con SDK 57 + esta versión de Jest, su mecanismo de
+  escaneo de directorio hace un `require()` crudo que no pasa por el
+  transform de Jest y revienta contra dependencias internas de
+  expo-router publicadas en ESM puro (`standard-navigation`). Ni siquiera
+  la variante en memoria (`MemoryContext`) navega de forma confiable: un
+  `<Redirect>` dentro de un `_layout` de grupo no siempre actualiza
+  `getPathname()` a tiempo. Y por separado, un `<Slot>`/`<Redirect>`
+  sueltos tampoco se pueden montar con el `render()` normal de Testing
+  Library — exigen el árbol de navegación completo.
+
+  La alternativa que se adoptó: la **decisión** de a dónde redirigir se
+  extrae a funciones puras (`src/navegacion/guardas.ts`), sin React ni
+  expo-router, probadas con Jest común. El layout que las usa queda en
+  dos líneas — demasiado simple para tener bug propio — y su cableado con
+  `<Redirect>`/`<Slot>` se verifica visualmente en el simulador, no con
+  Jest. Ver decisión A-21.
+
 - **Pruebas E2E** (Maestro o Detox): no se adoptan todavía. Se reevalúa
   después de A2, cuando exista un flujo completo que valga la pena
   automatizar de punta a punta.

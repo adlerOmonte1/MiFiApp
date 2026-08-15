@@ -82,6 +82,31 @@ jobs:
       - name: Generar expo-env.d.ts
         run: printf '/// <reference types="expo/types" />\n' > expo-env.d.ts
 
+      # .expo/types/router.d.ts trae las rutas válidas para `Href` con
+      # typedRoutes activo (app.json). A diferencia de expo-env.d.ts, NO es
+      # un archivo estático: lo genera el watcher de Metro al escanear
+      # src/app/, y `expo export` (que sí corre y sale solo) NO lo toca —
+      # verificado a mano. Por eso hay que levantar `expo start` un
+      # momento y matarlo, en vez de un one-liner.
+      # Sin esto, el typecheck falla apenas una ruta usa `Href` (como
+      # src/navegacion/guardas.ts) con "Cannot find module 'expo-router'"
+      # o tipos de ruta desactualizados.
+      - name: Generar tipos de rutas (typedRoutes)
+        run: |
+          npx expo start --web > /tmp/expo-start.log 2>&1 &
+          PID=$!
+          for i in $(seq 1 60); do
+            [ -f .expo/types/router.d.ts ] && break
+            sleep 2
+          done
+          kill "$PID" 2>/dev/null || true
+          pkill -f "expo start" 2>/dev/null || true
+          if [ ! -f .expo/types/router.d.ts ]; then
+            echo "::error::No se generaron los tipos de rutas en 120s"
+            cat /tmp/expo-start.log
+            exit 1
+          fi
+
       - name: Lint (ESLint)
         run: |
           npm run lint \

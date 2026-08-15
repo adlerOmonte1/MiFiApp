@@ -486,6 +486,39 @@ workflow cuando en realidad falló una sola cosa.
 alternativa sería versionar el archivo, pero su contenido depende del SDK,
 así que es preferible generarlo.
 
+⚠️ **Con `typedRoutes` activo, hay un segundo archivo generado y también
+ignorado: `.expo/types/router.d.ts`.** Trae las rutas válidas para `Href`
+— aparece la primera vez que algo tipa contra `Href` (A1.4,
+`src/navegacion/guardas.ts`). Mismo síntoma que `expo-env.d.ts`: falla en
+CI, no en local, porque nadie corrió `expo start` ahí para generarlo.
+
+La diferencia importante: **`expo export`, que sí corre hasta el final y
+sale solo, NO lo genera** — se verificó a mano. Solo lo escribe el watcher
+de `expo start`, así que hay que levantarlo un momento y matarlo:
+
+```yaml
+- name: Generar tipos de rutas (typedRoutes)
+  run: |
+    npx expo start --web > /tmp/expo-start.log 2>&1 &
+    PID=$!
+    for i in $(seq 1 60); do
+      [ -f .expo/types/router.d.ts ] && break
+      sleep 2
+    done
+    kill "$PID" 2>/dev/null || true
+    pkill -f "expo start" 2>/dev/null || true
+    if [ ! -f .expo/types/router.d.ts ]; then
+      echo "::error::No se generaron los tipos de rutas en 120s"
+      cat /tmp/expo-start.log
+      exit 1
+    fi
+```
+
+En la práctica tarda unos segundos, no los 120s del límite — el sondeo cada
+2s corta apenas aparece el archivo. El `--web` es a propósito: es la
+plataforma más liviana para esto, no hace falta ni el simulador ni un
+emulador.
+
 ---
 
 ## 10. Estructura del repositorio

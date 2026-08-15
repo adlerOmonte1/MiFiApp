@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 14 de agosto de 2026 (A1.3 terminado)
+> **Última actualización:** 14 de agosto de 2026 (A1.4 terminado)
 
 ---
 
@@ -21,11 +21,11 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fases 0 y 1 completas. Sprint A1 en curso: 3 de 6 pasos.**
+**Fases 0 y 1 completas. Sprint A1 en curso: 4 de 6 pasos.**
 
-Ya existen los componentes base del sistema de diseño y el store de sesión.
-**Todavía no se escribió ninguna pantalla** — las rutas siguen siendo el
-andamiaje de `create-expo-app`.
+Ya existen los componentes base, el store de sesión, los interceptores y el
+árbol de rutas con sus guards. **Todavía no hay contenido real en las
+pantallas** — las 4 de A1.5/A1.6 son placeholders.
 
 **A1 — Fundaciones y autenticación**, en curso. Los 5 endpoints que
 necesita existen y están probados en el backend contra Supabase real.
@@ -35,12 +35,19 @@ necesita existen y están probados en el backend contra Supabase real.
 | A1.1 Componentes base e íconos | ✅ verificado en simulador |
 | A1.2 Store de sesión + llavero | ✅ verificado en simulador |
 | A1.3 Interceptores de axios | ✅ verificado contra el backend real |
-| A1.4 Rutas y guards | ⏳ **siguiente** |
-| A1.5 Pantallas 03 y 04 | ⏳ |
+| A1.4 Rutas y guards | ✅ decisión probada con Jest; falta el recorrido visual |
+| A1.5 Pantallas 03 y 04 | ⏳ **siguiente** |
 | A1.6 Pantallas 01 y 02 | ⏳ |
 
-51 pruebas pasando. El umbral de cobertura de RNF-18 está **activo** sobre
-`src/stores/**` y `src/api/**`.
+64 pruebas pasando.
+
+⚠️ **A1.4 quedó sin verificación visual, a propósito.** Las 7 reglas de
+`Navegacion.md §5` están cubiertas con Jest sobre `src/navegacion/guardas.ts`
+puro. Pero las 4 pantallas destino son placeholders — clickearlas ahora no
+agregaría señal. El recorrido completo en el simulador (registro → login →
+consentimiento → dashboard) se hace **una sola vez, al cerrar A1.6**, cuando
+ya haya contenido real que ver. Si se cierra el sprint sin haberlo hecho,
+esto queda pendiente explícito, no completado por omisión.
 
 ---
 
@@ -122,6 +129,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | **A-18** | Ante cualquier fallo del llavero, el resultado es **sin sesión** | Quedar en `desconocido` colgaría la app en el splash; dejar pasar sería peor |
 | **A-19** | El interceptor **no navega**: solo cambia el estado de la sesión | Atar la red a la navegación dejaría dos lugares decidiendo a qué pantalla va el usuario. Los guards observan el estado y navegan |
 | **A-20** | Ningún `AxiosError` sale de `src/api/` | Hacia arriba viaja un `ErrorApi` con un `tipo` sobre el que se puede hacer `switch`; una pantalla no tiene por qué saber qué es un código HTTP |
+| **A-21** | `expo-router/testing-library` (`renderRouter`) **descartado**; las decisiones de guard son funciones puras probadas aparte | Frágil en esta versión (ESM sin transformar, redirects que no se resuelven a tiempo); `EstrategiaPruebas.md` tiene el detalle |
+| **A-22** | El árbol de rutas usa placeholders en las 4 pantallas de A1.5/A1.6 | Permite construir y probar los guards ya, sin bloquear en contenido que no existe todavía |
 
 ---
 
