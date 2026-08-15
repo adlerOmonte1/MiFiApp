@@ -136,8 +136,16 @@ pantalla, y cinco pestañas ya se sienten un tablero de control.
 | Con sesión, sin consentimiento, abre `/login` o `/registro` | → `/consentimiento` |
 | Con sesión y consentimiento, abre `/login` | → `/` (dashboard) |
 | Token vencido o revocado (401) | limpiar sesión → `/login` |
+| **403 con código `CONSENTIMIENTO_REQUERIDO`** | → `/consentimiento` (la sesión sigue siendo válida) |
 
-**El 401 se maneja en el interceptor de axios, no en cada pantalla.** El
+⚠️ **El backend distingue dos rechazos y la app no puede confundirlos.**
+Un **401** significa "no sé quién sos" → limpiar sesión e ir al login. Un
+**403 con código `CONSENTIMIENTO_REQUERIDO`** significa "sé quién sos, pero
+todavía no aceptaste" → ir al consentimiento **sin** borrar la sesión. Si el
+403 se tratara como un 401, el usuario perdería la sesión y quedaría en un
+ciclo de login que nunca lo deja entrar.
+
+**Ambos se manejan en el interceptor de axios, no en cada pantalla.** El
 token dura 7 días (RF-06) y el logout lo revoca del lado del servidor
 (D-03), así que un token puede volverse inválido mientras la app está
 abierta. Un 401 nunca se ignora en silencio.

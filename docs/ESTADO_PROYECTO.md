@@ -6,7 +6,7 @@
 >
 > Equivalente a `MiFiBackend/docs/ESTADO_PROYECTO.md`.
 >
-> **Última actualización:** 13 de agosto de 2026
+> **Última actualización:** 14 de agosto de 2026 (A1.3 terminado)
 
 ---
 
@@ -21,16 +21,26 @@ medida**, no una preferencia estética.
 
 ## 2. Dónde estamos AHORA MISMO
 
-**Fase 1 (Diseño) casi completa. Todavía no se escribió ninguna pantalla.**
+**Fases 0 y 1 completas. Sprint A1 en curso: 3 de 6 pasos.**
 
-Lo que existe es la base: el proyecto configurado y verificado, el sistema
-de diseño implementado en código, y la documentación de cómo se va a
-construir. `src/` sigue siendo el andamiaje de `create-expo-app` más el
-cliente de API.
+Ya existen los componentes base del sistema de diseño y el store de sesión.
+**Todavía no se escribió ninguna pantalla** — las rutas siguen siendo el
+andamiaje de `create-expo-app`.
 
-**Lo siguiente:** cerrar los pasos 1.5 (íconos) y 1.6 (micro-copys y
-estados vacíos), y arrancar el sprint **A1 — Fundaciones y autenticación**
-(`PlanTrabajoFrontend.md §3`).
+**A1 — Fundaciones y autenticación**, en curso. Los 5 endpoints que
+necesita existen y están probados en el backend contra Supabase real.
+
+| Paso | Estado |
+|:--|:--|
+| A1.1 Componentes base e íconos | ✅ verificado en simulador |
+| A1.2 Store de sesión + llavero | ✅ verificado en simulador |
+| A1.3 Interceptores de axios | ✅ verificado contra el backend real |
+| A1.4 Rutas y guards | ⏳ **siguiente** |
+| A1.5 Pantallas 03 y 04 | ⏳ |
+| A1.6 Pantallas 01 y 02 | ⏳ |
+
+51 pruebas pasando. El umbral de cobertura de RNF-18 está **activo** sobre
+`src/stores/**` y `src/api/**`.
 
 ---
 
@@ -58,7 +68,7 @@ Todo verificado y en `main` (y `staging`).
 | Proyecto Expo aplanado a la raíz | ✅ |
 | Dependencias del stack | ✅ |
 | ESLint + Prettier + TS estricto | ✅ |
-| Jest + Testing Library + MSW | ✅ 6 pruebas pasando |
+| Jest + Testing Library + MSW | ✅ |
 | Contrato OpenAPI → tipos generados | ✅ 1544 líneas |
 | Paquete de diseño sincronizado | ✅ `npm run sync:upstream` |
 | CI en GitHub Actions | ✅ verde |
@@ -68,7 +78,7 @@ Detalle y tropiezos: `GUIA_INSTALACION.MD`.
 
 ---
 
-## 5. Fase 1 — Diseño: 🔄 EN CURSO
+## 5. Fase 1 — Diseño: ✅ COMPLETA
 
 | Paso | Entregable | Estado |
 |:--|:--|:--|
@@ -76,8 +86,12 @@ Detalle y tropiezos: `GUIA_INSTALACION.MD`.
 | 1.2 | `Navegacion.md` | ✅ |
 | 1.3 | `EstrategiaPruebas.md` | ✅ |
 | 1.4 | Este documento | ✅ |
-| 1.5 | Set de íconos | ⏳ **bloquea A2** |
-| 1.6 | Micro-copys y estados vacíos (flujos B y D) | ⏳ **bloquea A2** |
+| 1.5 | `Iconografia.md` — set, inventario y regla de uso | ✅ |
+| 1.6 | `ContenidoUI.md` — textos, estados y validaciones | ✅ |
+| — | `TextoConsentimiento.md` | ⚠️ borrador sin aprobar |
+
+**Fase 1 cerrada.** Las decisiones que quedaban se tomaron al abrir A1
+(A-12 a A-16 en §6).
 
 ---
 
@@ -99,6 +113,15 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | **A-09** | Tokens de texto separados de los de superficie (`primarioTexto`, `alertaTexto`) | 4 pares del mockup no llegaban a WCAG AA; conserva la identidad visual |
 | **A-10** | Umbral de cobertura apagado hasta A1 | Un umbral siempre en rojo se ignora |
 | **A-11** | Guards de sesión y consentimiento en **un solo layout** | Si cada pantalla valida, alguna se olvida — y es un requisito ético |
+| **A-12** | **Tuteo** en todos los textos de interfaz | Registro natural en Perú; los participantes son peruanos |
+| **A-13** | `¿Olvidaste tu contraseña?` **oculto en v1** | No hay RF ni endpoint; un enlace muerto castiga el SUS |
+| **A-14** | La pantalla 03 lleva campo **Nombre** | El contrato lo exige y el dashboard lo usa en el saludo. Corregir `Wireframes.md` en el backend |
+| **A-15** | El **423** del login muestra mensaje propio | Se prioriza que el usuario bloqueado entienda por qué no entra. La fuga que revela es del backend y se arregla ahí |
+| **A-16** | El **403 `CONSENTIMIENTO_REQUERIDO`** no borra la sesión | Tratarlo como 401 dejaría al usuario en un ciclo de login del que no sale |
+| **A-17** | La sesión guarda **token + usuario** en el llavero, no solo el token | Permite decidir la ruta al arrancar sin una llamada de red. A1.3 agregará el refresco contra `/usuarios/me` |
+| **A-18** | Ante cualquier fallo del llavero, el resultado es **sin sesión** | Quedar en `desconocido` colgaría la app en el splash; dejar pasar sería peor |
+| **A-19** | El interceptor **no navega**: solo cambia el estado de la sesión | Atar la red a la navegación dejaría dos lugares decidiendo a qué pantalla va el usuario. Los guards observan el estado y navegan |
+| **A-20** | Ningún `AxiosError` sale de `src/api/` | Hacia arriba viaja un `ErrorApi` con un `tipo` sobre el que se puede hacer `switch`; una pantalla no tiene por qué saber qué es un código HTTP |
 
 ---
 
@@ -108,6 +131,8 @@ Las del paquete de diseño (D-01 a D-15) viven en
   inglés. Archivos en kebab-case.
 - **Pruebas junto al archivo** (`x.ts` + `x.test.ts`).
 - **Commits:** tipo en inglés, descripción en español, referencia al RF/HU.
+  **Breves: 1 o 2 líneas como máximo.** El detalle va en la documentación,
+  no en el mensaje del commit.
 - **Ramas:** `feature/*` → PR → `staging` → `main`.
 - **Estado:** TanStack Query para lo que vive en el backend; Zustand para
   lo que solo existe en el dispositivo.
@@ -125,6 +150,11 @@ Las del paquete de diseño (D-01 a D-15) viven en
 | 4 | Sin pruebas E2E | Bajo por ahora | Reevaluar tras A2 |
 | 5 | Ambos repos son **públicos** (la guía asumía privados) | A confirmar | No hay secretos commiteados |
 | 6 | Warning de lint en `client.ts` (`import/no-named-as-default-member`, axios) | Cosmético | — |
+| 7 | **AUT-01 CA01 contradice RF-47/CON-01**: uno manda al dashboard tras el registro, el otro exige consentimiento antes de habilitar nada | **Alto** — son requisitos éticos del estudio | Corregir en `HistoriasUsuario.md` del backend; ver `ContenidoUI.md §8` |
+| 8 | Ícono y splash siguen siendo los de Expo | Medio — **bloquea el piloto**, no el desarrollo | `Iconografia.md §6` |
+| 9 | **El texto de consentimiento es un borrador sin aprobar** | **Alto — bloquea el piloto.** Es evidencia para el comité de ética (Ley 29733) | `TextoConsentimiento.md` |
+| 10 | No está definido si puede haber participantes **menores de edad** | **Alto** — cambiaría el procedimiento de consentimiento completo | `TextoConsentimiento.md §7` |
+| 11 | Enumeración de usuarios vía 423 (Issue nº1 del backend, abierto) | Medio — la UI lo expone por decisión A-15 | Se arregla en el backend |
 
 ---
 

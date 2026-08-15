@@ -114,6 +114,10 @@ De `mifi-app-nueva-pantalla`, y no es negociable:
 
 - **`await render(...)`** — Testing Library v14 es asíncrono. Sin el
   `await`, `screen` queda vacío y el error no dice por qué.
+- **`await waitFor(...)` después de un `fireEvent` que cambia estado.** El
+  re-render también es asíncrono en v14: sin esperarlo se lee el árbol
+  viejo y la prueba falla como si el componente estuviera roto. Ya pasó una
+  vez con el botón de mostrar contraseña de `Campo`.
 - **Consultas por rol o texto visible**, no por `testID`, siempre que se
   pueda: prueban lo que el usuario ve. `testID` es el último recurso.
 - **Nombres de prueba en español**, describiendo comportamiento, no
